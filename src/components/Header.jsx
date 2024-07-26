@@ -27,12 +27,12 @@ function classNames(...classes) {
 function Header() {
   return (
     <nav className="w-full">
-      <div className="lg:px-10 md:px-5 py-1 lg:flex md:flex hidden justify-between bg-gray-900 text-gray-400 capitalize">
+      <div className="lg:px-10 md:px-5 py-1 lg:flex md:flex hidden justify-between bg-black text-gray-400 capitalize">
         <p className="text-sm">free shipping over $100 & free returns</p>
         <p className="text-sm">Hotline: (+91) 88025 32150</p>
       </div>
 
-      <Disclosure as="nav" className="bg-gray-800">
+      <Disclosure as="nav" className="bg-gray-900">
         <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
           <div className="relative flex h-16 items-center justify-between">
             <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
@@ -161,12 +161,12 @@ function Header() {
         </DisclosurePanel>
       </Disclosure>
 
-      <div className="lg:px-10 px-5 py-2 bg-gray-700 lg:flex md:flex justify-between">
+      <div className="lg:px-10 px-5 py-2 bg-gray-800 lg:flex md:flex justify-between">
         <div className="flex items-center">
           <div>
             <TbCategory size={30} color="white" />
           </div>
-          <select className="bg-gray-700 cursor-pointer text-white uppercase text-lg lg:px-16 px-14 lg:mx-6">
+          <select className="bg-gray-800 cursor-pointer text-white uppercase text-lg lg:px-16 px-14 py-2 lg:mx-6">
             <option selected disabled>
               Shop categories
             </option>

@@ -2,6 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
+@import '@material-tailwind/react/theme/index.css';
+
 @layer components{
   .icon_wrapper{
     @apply border border-gray-800 rounded-full w-[40px] h-[40px] grid place-items-center text-[22px]
