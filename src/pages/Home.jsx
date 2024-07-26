@@ -24,6 +24,7 @@ import Slider from "react-slick";
 
 import BlogCard from "../components/BlogCard";
 import PopularProductsCard from "../components/PopularProductsCard";
+import { FamousCard } from "../components/FamousCard";
 
 
 const products = [
@@ -378,6 +379,36 @@ function Home() {
         </Marquee>
       </section>
 
+      {/* popular products section */}
+      <section className="px-10 py-16 bg-white">
+            <h2 className="text-2xl font-bold tracking-tight text-gray-900 capitalize my-2 mb-5 lg:text-left md:text-left text-center px-4">
+              our popular products
+            </h2>
+
+            <div className="grid lg:grid-cols-4 md:grid-cols-3 grid-cols-1 gap-2 place-items-center">
+    
+              {products.map((product) => <div key={product.id} className="group relative"> <PopularProductsCard product={product}/> </div>)}
+            </div>
+
+            <div className="px-32">
+            <Button
+          ripple={false}
+          fullWidth={true}
+          className="bg-blue-gray-900/10 text-blue-gray-900 shadow-none hover:scale-105 hover:shadow-none focus:scale-105 focus:shadow-none active:scale-100 my-5"
+        >
+          Load More
+        </Button>
+            </div>
+      </section>
+
+
+      {/* famous wrapper */}
+      <section className="bg-gray-200 w-full px-10 grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 place-items-center py-10 gap-5">
+          <FamousCard/>
+          <FamousCard/>
+          <FamousCard/>
+      </section>
+
       {/* blog section slider- npm react slick and card material tailwind card */}
       <section className="bg-gray-200 lg:p-10 p-6 px-3  ">
         <div className="flex justify-between">
@@ -414,27 +445,9 @@ function Home() {
         </div>
       </section>
 
-      {/* popular products section */}
-      <section className="px-10 py-16">
-            <h2 className="text-2xl font-bold tracking-tight text-gray-900 capitalize my-2 mb-5 lg:text-left md:text-left text-center px-4">
-              our popular products
-            </h2>
+      {/* special products - pending */}
 
-            <div className="grid lg:grid-cols-4 md:grid-cols-3 grid-cols-1 gap-2 place-items-center">
-    
-              {products.map((product) => <div key={product.id} className="group relative"> <PopularProductsCard product={product}/> </div>)}
-            </div>
-
-            <div className="px-32">
-            <Button
-          ripple={false}
-          fullWidth={true}
-          className="bg-blue-gray-900/10 text-blue-gray-900 shadow-none hover:scale-105 hover:shadow-none focus:scale-105 focus:shadow-none active:scale-100 my-5"
-        >
-          Load More
-        </Button>
-            </div>
-      </section>
+      
     </div>
   );
 }
