@@ -1,10 +1,11 @@
-import React from "react";
+import React,{useRef} from "react";
+
 import img from "../assets/catbanner-01.jpg";
 import img2 from "../assets/catbanner-02.jpg";
 import img3 from "../assets/catbanner-03.jpg";
 import img4 from "../assets/catbanner-04.jpg";
 import ImageCarousel from "../components/ImageCarousel";
-import Card from "../components/Card";
+import CardCustom from "../components/CardCustom";
 
 import img5 from "../assets/service.png";
 import img6 from "../assets/service-02.png";
@@ -17,8 +18,85 @@ import Marquee from "react-fast-marquee";
 import { IoIosArrowBack } from "react-icons/io";
 import { IoIosArrowForward } from "react-icons/io";
 
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import Slider from "react-slick";
+
+
+import BlogCard from "../components/BlogCard";
+
+// function PreviousNextMethods() {
+//   let sliderRef = useRef(null);
+//   const next = () => {
+//     sliderRef.slickNext();
+//   };
+//   const previous = () => {
+//     sliderRef.slickPrev();
+//   };
+//   const settings = {
+//     dots: true,
+//     infinite: true,
+//     speed: 500,
+//     slidesToShow: 1,
+//     slidesToScroll: 1
+//   }
+// }
 
 function Home() {
+  const settings = {
+    dots: false,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 3,
+    // slidesToScroll: 3,
+    arrows:false,
+    responsive: [
+      {
+        breakpoint: 1280,
+        settings: {
+          slidesToShow: 3,
+          slidesToScroll: 3,
+          infinite: true,
+          // dots: true
+        }
+      },
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: 3,
+          slidesToScroll: 3,
+          infinite: true,
+          // dots: true
+        }
+      },
+      {
+        breakpoint: 768,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 2,
+          initialSlide: 2
+        }
+      },
+      {
+        breakpoint: 640,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1
+        }
+      }
+    ]
+    
+  };
+
+  let sliderRef = useRef(null);
+  const next = () => {
+    sliderRef.slickNext();
+  };
+  const previous = () => {
+    sliderRef.slickPrev();
+  };
+  
+  
   return (
     <div className="">
       {/* first section */}
@@ -28,25 +106,25 @@ function Home() {
           <ImageCarousel name="Anuag" />
         </div>
 
-        <Card
+        <CardCustom
           img={img}
           subhead="best sale"
           head="iPadS13+Pro"
           desp="From $999.00 or $41.62/mo."
         />
-        <Card
+        <CardCustom
           img={img2}
           subhead="best sale"
           head="iPadS13+Pro"
           desp="From $999.00 or $41.62/mo."
         />
-        <Card
+        <CardCustom
           img={img3}
           subhead="best sale"
           head="iPadS13+Pro"
           desp="From $999.00 or $41.62/mo."
         />
-        <Card
+        <CardCustom
           img={img4}
           subhead="best sale"
           head="iPadS13+Pro"
@@ -263,17 +341,36 @@ function Home() {
         </Marquee>
       </section>
 
-      {/* blog section */}
-      <section className="bg-gray-200 px-10">
+      {/* blog section slider- npm react slick and card material tailwind card */}
+      <section className="bg-gray-200 lg:p-10 p-6 px-3  ">
         <div className="flex justify-between">
-          <h1 className="capitalize text-xl font-semibold">our latest news</h1>
+          <h1 className="capitalize lg:text-xl text-2xl font-semibold">our latest news</h1>
           <div className="flex gap-1">
-            <div className="w-5 h-5 cursor-pointer hover:bg-black hover:text-white grid place-items-center rounded-full"><IoIosArrowBack /></div>
-            <div className="w-5 h-5 cursor-pointer hover:bg-black hover:text-white grid place-items-center rounded-full"><IoIosArrowForward /></div>
+            <button onClick={previous} className="w-5 h-5 cursor-pointer hover:bg-black hover:text-white grid place-items-center rounded-full">
+              <IoIosArrowBack />
+            </button>
+            <button onClick={next} className="w-5 h-5 cursor-pointer hover:bg-black hover:text-white grid place-items-center rounded-full">
+              <IoIosArrowForward />
+            </button>
           </div>
         </div>
-        
+        <div className="slider-container py-4">
+          <Slider ref={slider => {
+          sliderRef = slider;
+        }}
+        {...settings}>
+            
+            <BlogCard/>
+            <BlogCard/>
+            <BlogCard/>
+            <BlogCard/>
+            
+          </Slider>
+          
+        </div>
       </section>
+
+      
     </div>
   );
 }

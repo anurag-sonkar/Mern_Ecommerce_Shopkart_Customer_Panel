@@ -1,7 +1,7 @@
 import React from "react";
 
-function Card({ img, subhead, head, desp }) {
-    console.log(img, subhead, head, desp )
+function CardCustom({ img, subhead, head, desp }) {
+    // console.log(img, subhead, head, desp )
   return (
     <div className="relative rounded-lg overflow-hidden lg:col-span-1 col-span-2 cursor-pointer transition-all ease-in-out duration-300 hover:scale-110 hover:z-10">
       <img src={img} className="h-full w-full object-cover" />
@@ -14,4 +14,4 @@ function Card({ img, subhead, head, desp }) {
   );
 }
 
-export default Card;
+export default CardCustom;
