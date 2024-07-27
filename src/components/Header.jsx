@@ -14,10 +14,10 @@ import CartCountBadge from "./CartCountBadge";
 import { TbCategory } from "react-icons/tb";
 
 const navigation = [
-  { name: "Home", href: "#", current: true },
-  { name: "Our Store", href: "#", current: false },
-  { name: "Blogs", href: "#", current: false },
-  { name: "Contact", href: "#", current: false },
+  { name: "Home", href: "/", current: true },
+  { name: "Our Store", href: "/store", current: false },
+  { name: "Blogs", href: "/blogs", current: false },
+  { name: "Contact", href: "/contact", current: false },
 ];
 
 function classNames(...classes) {

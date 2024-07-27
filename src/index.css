@@ -9,3 +9,93 @@
     @apply border border-gray-800 rounded-full w-[40px] h-[40px] grid place-items-center text-[22px]
   }
 }
+
+/* filter - store compo*/
+.filter-card{
+  background-color: white;
+  border-radius: 4px;
+  padding: 0.8rem 1rem;
+  margin-bottom: 0.8rem;
+}
+.filter-title{
+  font-weight: 700;
+  margin: 0.4rem 0;
+}
+
+.sub-title{
+  font-size: 14px;
+  font-weight: 600;
+  color: rgb(144, 144, 144);
+  text-transform: capitalize;
+  margin: 0.2rem 0;
+}
+
+/* Custom Checkbox Styling */
+.custom-checkbox {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.custom-checkbox + label {
+  position: relative;
+  padding-left: 25px;
+  cursor: pointer;
+}
+
+.custom-checkbox + label:before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 16px;
+  height: 16px;
+  outline: 2px solid #08777d;
+  /* border: 0.5px solid #ffffff; */
+  background-color: white;
+  border-radius: 4px;
+
+}
+
+.custom-checkbox:checked + label:before {
+  background-color: #4F46E5;
+}
+
+.custom-checkbox:checked + label:after {
+  content: "";
+  position: absolute;
+  left: 5px;
+  top: 2px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+  
+}
+
+.colors li{
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+
+
+}
+.tags-container{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+.tags{
+  background-color: rgb(236, 236, 236);
+  border-radius: 4px;
+  padding: 0.2rem 0.5rem;
+  font-size: 0.8rem;
+  transition: all 0.2s ease-in-out ;
+  cursor: pointer;
+}
+
+.tags:hover{
+  background-color: black;
+  color: #fff;
+}
