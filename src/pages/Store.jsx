@@ -1,21 +1,90 @@
-import React from "react";
+import React, { useState } from "react";
 import { BreadCrumb } from "../components/BreadCrumb";
 import HelmetTitle from "../components/HelmetTitle";
 import { Input } from "@material-tailwind/react";
 import CardRandom from "../components/CardRandom";
+import { FaFilter } from "react-icons/fa";
+import { DrawerFilter } from "../components/DrawerFilter";
+import PopularProductsCard from "../components/PopularProductsCard";
+import { PaginationCompo } from "../components/PaginationCompo";
+
+const products = [
+  {
+    id: 1,
+    name: "Basic Tee",
+    href: "#",
+    imageSrc:
+      "https://images.unsplash.com/photo-1629367494173-c78a56567877?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=927&q=80",
+
+    imageAlt: "Front of men's Basic Tee in black.",
+    price: "$35",
+    color: "Black",
+  },
+  {
+    id: 2,
+    name: "Basic Tee",
+    href: "#",
+    imageSrc: "../src/assets/tab.jpg",
+    imageAlt: "Front of men's Basic Tee in black.",
+    price: "$35",
+    color: "Black",
+  },
+  {
+    id: 3,
+    name: "Basic Tee",
+    href: "#",
+    imageSrc:
+      "https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg",
+    price: "$35",
+    color: "Black",
+  },
+  {
+    id: 4,
+    name: "Basic Tee",
+    href: "#",
+    imageSrc:
+      "https://images.unsplash.com/photo-1629367494173-c78a56567877?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=927&q=80",
+    imageAlt: "Front of men's Basic Tee in black.",
+    price: "$35",
+    color: "Black",
+  },
+  {
+    id: 5,
+    name: "Basic Tee",
+    href: "#",
+    imageSrc:
+      "https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg",
+    imageAlt: "Front of men's Basic Tee in black.",
+    price: "$35",
+    color: "Black",
+  },
+  // More products...
+];
+
 function Store() {
+  const [openRight, setOpenRight] = React.useState(false);
+  const openDrawerRight = () => setOpenRight(true);
   return (
     <div className="w-full bg-gray-200">
       <HelmetTitle title="Store" />
-      <div className="bg-white px-10 py-1">
-        <BreadCrumb title="Store" />
+      <div className="bg-white lg:px-10 px-5 py-1 flex justify-between items-center">
+        <div>
+          <BreadCrumb title="Store" />
+        </div>
+        <div className="lg:hidden block" onClick={openDrawerRight}>
+          <FaFilter size={25} />
+        </div>
       </div>
 
-      {/* store */}
-      <div className="grid grid-cols-12 capitalize px-10 py-5 gap-4">
-        {/* filter */}
+      {/* drawer */}
+      <DrawerFilter openRight={openRight} setOpenRight={setOpenRight} />
 
-        <div className="col-span-3">
+      {/* store */}
+      <div className="grid grid-cols-12 capitalize lg:px-10 px-5 py-5 gap-4">
+        {/* filter - for only lg screen  , md&sm-screen filter is in DrawerFilter*/}
+
+        <div className="col-span-3 lg:block hidden">
+          {/* filter-card :shop by categories*/}
           <div className="filter-card">
             <h1 className="filter-title">shop by categories</h1>
             <div>
@@ -27,6 +96,7 @@ function Store() {
               </ul>
             </div>
           </div>
+          {/* filter-card :filter by*/}
           <div className="filter-card">
             <h1 className="filter-title">filter by</h1>
             {/*availability */}
@@ -137,7 +207,7 @@ function Store() {
             </div>
           </div>
 
-          {/* filter-card */}
+          {/* filter-card:product tags */}
           <div className="filter-card">
             <h1 className="filter-title">product tags</h1>
             <div className="tags-container">
@@ -152,21 +222,19 @@ function Store() {
             </div>
           </div>
 
-          {/* filter-card */}
+          {/* filter-card :random product*/}
           <div className="filter-card">
             <h1 className="filter-title">random product</h1>
-            <div className="">
-              <CardRandom />
-            </div>
+            <div className="">{/* <CardRandom /> */}</div>
           </div>
         </div>
 
         {/* second half grid*/}
-        <div className="col-span-9">
+        <div className="lg:col-span-9 col-span-12">
           {/* first row */}
           <div className="bg-white px-4 py-2 rounded-sm flex justify-between items-center">
             {/* sort by */}
-            <div className=" flex gap-3 items-center ">
+            <div className="flex gap-3 items-center lg:justify-normal md:justify-normal justify-between w-full max-w-72">
               <label>sort</label>
               <select className="bg-gray-100 px-2 py-2 capitalize outline-none border-none rounded-md text-sm text-gray-600">
                 <option value="popular">most popular</option>
@@ -181,9 +249,9 @@ function Store() {
               </select>
             </div>
             {/* grid view */}
-            <div className="flex gap-3">
+            <div className="lg:flex md:flex gap-3 hidden">
               <div className="text-gray-500 text-sm">21 Products</div>
-              <div className="flex gap-1 items-center">
+              {/* <div className="flex gap-1 items-center">
                 <div className="bg-blue-gray-100 p-1 rounded-sm cursor-pointer hover:bg-blue-gray-700 transition-colors ease-in-out duration-150">
                   <img
                     className="w-3 h-3 object-contain"
@@ -208,11 +276,23 @@ function Store() {
                     src="../src/assets/gr4.svg"
                   />
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
+          {/* second-row :  products -  */}
+          <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 place-items-center gap-4 bg-white px-4 py-4 rounded-sm">
+            {products.map((product) => (
+              <div key={product.id} className="group relative">
+                {" "}
+                <PopularProductsCard product={product} />{" "}
+              </div>
+            ))}
+          </div>
+          {/* third row - pagination */}
+          <div className="grid place-items-end mt-2 py-3 px-2 rounded-md bg-white w-full">
+            <PaginationCompo />
+          </div>
         </div>
-        {/*products -  */}
       </div>
     </div>
   );
