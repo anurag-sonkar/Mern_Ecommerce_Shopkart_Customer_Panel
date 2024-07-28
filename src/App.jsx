@@ -12,6 +12,8 @@ import Wishlist from './pages/Wishlist'
 import AuthenticationForm from "./pages/Authentication/Auth/Auth"
 import SignupForm from './pages/Authentication/Signup/Signup'
 import LoginForm from './pages/Authentication/Login/Login'
+import ResetPassword from './pages/Authentication/ResetPassword'
+import ForgotPassword from './pages/Authentication/ForgotPassword'
 
 function App() {
   return (
@@ -29,6 +31,8 @@ function App() {
           {/* small screen auth handle */}
           <Route path='/signup' element={<SignupForm/>} />
           <Route path='/login' element={<LoginForm/>} />
+          <Route path='/forgot-password' element={<ForgotPassword/>} />
+          <Route path='/reset-password' element={<ResetPassword/>} />
 
 
         </Route>

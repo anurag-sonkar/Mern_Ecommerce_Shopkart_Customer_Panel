@@ -34,9 +34,9 @@ function LoginForm() {
         onChange={(e) => setPassword(e.target.value)}
       />
       {error && <div className={styles.errorMessage}>{error}</div>}
-      <a href="#" className={styles.anchor} onClick={() => alert("Reset password functionality")}>
+      <Link to="/forgot-password" className={styles.anchor}>
         Forgot your password?
-      </a>
+      </Link>
       <button type="button" className={styles.button} onClick={handleLogin}>
         Sign In
       </button>
