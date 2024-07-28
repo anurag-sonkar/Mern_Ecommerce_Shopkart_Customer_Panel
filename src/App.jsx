@@ -9,6 +9,9 @@ import Store from './pages/Store'
 import Blogs from './pages/Blogs'
 import CompareProducts from './pages/CompareProducts'
 import Wishlist from './pages/Wishlist'
+import AuthenticationForm from "./pages/Authentication/Auth/Auth"
+import SignupForm from './pages/Authentication/Signup/Signup'
+import LoginForm from './pages/Authentication/Login/Login'
 
 function App() {
   return (
@@ -22,6 +25,11 @@ function App() {
           <Route path='/blogs' element={<Blogs/>} />
           <Route path='/compare-products' element={<CompareProducts/>} />
           <Route path='/whishlist' element={<Wishlist/>} />
+          <Route path='/auth' element={<AuthenticationForm/>} />
+          {/* small screen auth handle */}
+          <Route path='/signup' element={<SignupForm/>} />
+          <Route path='/login' element={<LoginForm/>} />
+
 
         </Route>
 
