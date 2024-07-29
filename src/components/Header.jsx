@@ -81,10 +81,10 @@ function Header() {
             </div>
             <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
               {/* <FaOpencart /> */}
-              <div className="icon_wrapper relative cursor-pointer">
+              <Link to="/addtocart" className="icon_wrapper relative cursor-pointer">
                 <FaOpencart size={40} color="white" className="z-10" />
                 <CartCountBadge size="w-[22px] h-[22px]" value={23} />
-              </div>
+              </Link>
               {/* Profile dropdown */}
               <Menu as="div" className="relative ml-6">
                 <div>

@@ -16,6 +16,8 @@ import ResetPassword from './pages/Authentication/ResetPassword'
 import ForgotPassword from './pages/Authentication/ForgotPassword'
 import SingleBlog from './pages/SingleBlog'
 import SingleProduct from './pages/SingleProduct'
+import AddToCart from './pages/AddToCart'
+import Checkout from './pages/Checkout'
 
 function App() {
   return (
@@ -32,6 +34,8 @@ function App() {
           <Route path='/compare-products' element={<CompareProducts/>} />
           <Route path='/whishlist' element={<Wishlist/>} />
           <Route path='/auth' element={<AuthenticationForm/>} />
+          <Route path='/addtocart' element={<AddToCart/>} />
+          <Route path='/checkout' element={<Checkout/>} />
           {/* small screen auth handle */}
           <Route path='/signup' element={<SignupForm/>} />
           <Route path='/login' element={<LoginForm/>} />

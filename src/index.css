@@ -106,3 +106,20 @@
   padding: 1rem 0;
   width: 100%;
 }
+
+/* image zoom*/ 
+.img-magnifier-container{
+  position: relative;
+}
+
+/* .magnifier-img{
+  width: auto;
+  height: 80vh;
+} */
+
+.magnifier-image{
+  width: 200px;
+  height: 200px;
+  border: 2px solid #fff;
+
+}

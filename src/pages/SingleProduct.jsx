@@ -7,6 +7,7 @@ import RatingMUI from "../components/RatingMUI";
 import { Button } from "@material-tailwind/react";
 import { CiHeart } from "react-icons/ci";
 import { GoGitCompare } from "react-icons/go";
+import ImageMagnifier from "../components/ImageMagnifier";
 
 let dummyImages = [
   {
@@ -102,10 +103,7 @@ function SingleProduct() {
                 ))}
               </div>
               <div className="col-span-8 bg-gray-50 rounded-xl lg:px-3 lg:py-4 w-fit px-1 py-1">
-                <img
-                  src={imgSrc}
-                  className="max-h-[36rem] w-[100%] max-w-[36rem] object-cover rounded-xl"
-                />
+                <ImageMagnifier imgSrc={imgSrc} />
               </div>
             </div>
           </main>
