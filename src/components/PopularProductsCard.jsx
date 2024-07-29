@@ -13,12 +13,14 @@ import { FcLike } from "react-icons/fc";
 import { IoCartOutline } from "react-icons/io5";
 import { FaRegEye } from "react-icons/fa";
 import { TbArrowsCross } from "react-icons/tb";
+import { Link } from "react-router-dom";
 
 function PopularProductsCard({ product }) {
   const [toggleWishlist, setToggleWishlist] = useState(false);
 
   return (
-    <Card className="w-64 relative group">
+    <Link to={`/product/${product.id}`}>
+      <Card className="w-64 relative group">
       <CardHeader shadow={false} floated={false} className="h-56">
         <img
           src={product.imageSrc}
@@ -82,6 +84,7 @@ function PopularProductsCard({ product }) {
         </Button>
       </CardFooter> */}
     </Card>
+    </Link>
   );
 }
 

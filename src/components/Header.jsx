@@ -167,7 +167,7 @@ function Header() {
           <div>
             <TbCategory size={30} color="white" />
           </div>
-          <select className="bg-gray-800 cursor-pointer text-white uppercase text-lg lg:px-16 px-14 py-2 lg:mx-6">
+          <select className="bg-gray-800 cursor-pointer text-white uppercase text-lg lg:px-16  pl-14 py-2 lg:mx-6">
             <option selected disabled>
               Shop categories
             </option>
@@ -179,7 +179,7 @@ function Header() {
 
         <div>
           <input
-            className="lg:w-[400px] w-[320px] py-1 lg:px-4 px-2 rounded-full lg:my-1 my-2 lg:text-base text-sm"
+            className="lg:w-96 md:w-96 w-[100%] py-1 lg:px-4 px-2 rounded-full lg:my-1 my-2 lg:text-base text-sm"
             placeholder="Search For Category, Products and Many More...."
           />
         </div>

@@ -15,6 +15,7 @@ import LoginForm from './pages/Authentication/Login/Login'
 import ResetPassword from './pages/Authentication/ResetPassword'
 import ForgotPassword from './pages/Authentication/ForgotPassword'
 import SingleBlog from './pages/SingleBlog'
+import SingleProduct from './pages/SingleProduct'
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
           <Route path='/about' element={<About/>} />
           <Route path='/contact' element={<Contact/>} />
           <Route path='/store' element={<Store/>} />
+          <Route path='/product/:id' element={<SingleProduct/>} />
           <Route path='/blogs' element={<Blogs/>} />
           <Route path='/blog/:id' element={<SingleBlog/>} />
           <Route path='/compare-products' element={<CompareProducts/>} />
