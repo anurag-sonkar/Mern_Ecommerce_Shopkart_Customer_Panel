@@ -112,7 +112,7 @@ function Checkout() {
                         <p className="mt-1 truncate text-xs leading-5 text-gray-500">{address.pinCode}</p>
                       </div>
                     </div>
-                    <div className="hidden sm:flex sm:flex-col sm:items-end">
+                    <div className="sm:flex sm:flex-col sm:items-end">
                       <p className="text-sm leading-6 text-gray-900">Phone: {address.phone}</p>
                       <p className="text-sm leading-6 text-gray-500">{address.city}</p>
                     </div>
