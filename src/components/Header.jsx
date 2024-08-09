@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Disclosure,
   DisclosureButton,
@@ -12,7 +12,15 @@ import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { FaOpencart } from "react-icons/fa";
 import CartCountBadge from "./CartCountBadge";
 import { TbCategory } from "react-icons/tb";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { UserOutlined } from "@ant-design/icons";
+import { Button, Flex } from "antd";
+import { useDispatch, useSelector } from "react-redux";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { toast, Bounce } from "react-toastify";
+import { signOut } from "../features/auth/authSlice";
 
 const navigation = [
   { name: "Home", href: "/", current: true },
@@ -21,18 +29,102 @@ const navigation = [
   { name: "Contact", href: "/contact", current: false },
 ];
 
+/* check screen size for animation */
+const useScreenSize = () => {
+  const [isLargeScreen, setIsLargeScreen] = useState(window.innerWidth >= 1024);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsLargeScreen(window.innerWidth >= 1024);
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  return isLargeScreen;
+};
+
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
 function Header() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const isLargeScreen = useScreenSize(); // custom hook
+
+  const { user, isLoading, isError, isSuccess, message } = useSelector(
+    (state) => state.auth
+  );
+
+  const [profile,setProfile] = useState(user?.imgpath?.url || "../src/assets/profile.png")
+  // console.log(user,profile)
+
+  const handleSignOut =  (e)=>{
+    e.preventDefault();
+    const signOutPromise = dispatch(signOut()).unwrap()
+    toast.promise(
+      signOutPromise,
+      {
+        pending: "Sigining out...",
+        success: "Sigining out successfully!",
+        error: `Signout failed!`,
+      },
+      {
+        position: "top-right",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        transition: Bounce,
+      }
+    );
+
+    
+  }
+
+
+  useEffect(
+    ()=>{
+      setProfile(user?.imgpath?.url || "../src/assets/profile.png")
+    },[dispatch]
+  )
+
+  // handing navigation based on screen lg / md-sm
+  const handleNavigation = () => {
+    if (isLargeScreen) {
+      navigate("/auth");
+    } else {
+      navigate("/login");
+    }
+  };
+
   return (
     <nav className="w-full">
       <div className="lg:px-10 md:px-5 py-1 lg:flex md:flex hidden justify-between bg-black text-gray-400 capitalize">
         <p className="text-sm">free shipping over $100 & free returns</p>
         <p className="text-sm">Hotline: (+91) 88025 32150</p>
       </div>
-
+      <ToastContainer
+        position="top-center"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+        transition:Bounce
+      />
       <Disclosure as="nav" className="bg-gray-900">
         <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
           <div className="relative flex h-16 items-center justify-between">
@@ -79,9 +171,14 @@ function Header() {
                 </div>
               </div>
             </div>
-            <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+
+            {
+              user ? <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
               {/* <FaOpencart /> */}
-              <Link to="/addtocart" className="icon_wrapper relative cursor-pointer">
+              <Link
+                to="/addtocart"
+                className="icon_wrapper relative cursor-pointer"
+              >
                 <FaOpencart size={40} color="white" className="z-10" />
                 <CartCountBadge size="w-[22px] h-[22px]" value={23} />
               </Link>
@@ -93,11 +190,12 @@ function Header() {
                     <span className="sr-only">Open user menu</span>
                     <img
                       alt=""
-                      src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                      className="h-10 w-10 rounded-full"
+                      src={profile}
+                      className="h-10 w-10 rounded-full object-cover"
                     />
                   </MenuButton>
                 </div>
+                
                 <MenuItems
                   transition
                   className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
@@ -127,16 +225,25 @@ function Header() {
                     </Link>
                   </MenuItem>
                   <MenuItem>
-                    <Link
-                      to="#"
-                      className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100"
+                    <button
+                      onClick={handleSignOut}
+                      className="w-full text-left block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100"
                     >
                       Sign out
-                    </Link>
+                    </button>
                   </MenuItem>
                 </MenuItems>
               </Menu>
-            </div>
+            </div> : <Button
+                  type="primary"
+                  className="bg-[#F44336] shadow-2xl text-lg py-[18px]"
+                  icon={<UserOutlined style={{ fontSize: "1.5rem" }} />}
+                  onClick={handleNavigation}
+                >
+                  Login
+                </Button>
+            }
+            
           </div>
         </div>
 
@@ -162,7 +269,7 @@ function Header() {
         </DisclosurePanel>
       </Disclosure>
 
-      <div className="lg:px-10 px-5 py-2 bg-gray-800 lg:flex md:flex justify-between">
+        <div className="lg:px-10 px-5 py-2 bg-gray-800 lg:flex md:flex justify-between">
         <div className="flex items-center">
           <div>
             <TbCategory size={30} color="white" />

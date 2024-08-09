@@ -18,7 +18,7 @@ export function BreadCrumb(props) {
       {/* <a href="#" className="opacity-60">
         <span>Components</span>
       </a> */}
-      <a href="/store">{title}</a>
+      <Link to="/store">{title}</Link>
     </Breadcrumbs>
   );
 }

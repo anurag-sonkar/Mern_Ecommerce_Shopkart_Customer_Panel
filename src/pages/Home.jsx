@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 
 import img from "../assets/catbanner-01.jpg";
 import img2 from "../assets/catbanner-02.jpg";
@@ -12,7 +12,7 @@ import img6 from "../assets/service-02.png";
 import img7 from "../assets/service-03.png";
 import img8 from "../assets/service-04.png";
 import img9 from "../assets/service-05.png";
-import { Carousel,Button } from "@material-tailwind/react";
+import { Carousel, Button } from "@material-tailwind/react";
 import Marquee from "react-fast-marquee";
 
 import { IoIosArrowBack } from "react-icons/io";
@@ -25,7 +25,8 @@ import Slider from "react-slick";
 import BlogCard from "../components/BlogCard";
 import PopularProductsCard from "../components/PopularProductsCard";
 import { FamousCard } from "../components/FamousCard";
-
+import { useDispatch, useSelector } from "react-redux";
+import { getAllProducts } from "../features/products/productSlice";
 
 const products = [
   {
@@ -33,9 +34,8 @@ const products = [
     name: "Basic Tee",
     href: "#",
     imageSrc:
-    "https://images.unsplash.com/photo-1629367494173-c78a56567877?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=927&q=80"
-          
-      ,
+      "https://images.unsplash.com/photo-1629367494173-c78a56567877?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=927&q=80",
+
     imageAlt: "Front of men's Basic Tee in black.",
     price: "$35",
     color: "Black",
@@ -44,8 +44,7 @@ const products = [
     id: 2,
     name: "Basic Tee",
     href: "#",
-    imageSrc:
-      "../src/assets/tab.jpg",
+    imageSrc: "../src/assets/tab.jpg",
     imageAlt: "Front of men's Basic Tee in black.",
     price: "$35",
     color: "Black",
@@ -55,8 +54,7 @@ const products = [
     name: "Basic Tee",
     href: "#",
     imageSrc:
-    "https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg"
-      ,
+      "https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg",
     price: "$35",
     color: "Black",
   },
@@ -83,6 +81,14 @@ const products = [
   // More products...
 ];
 function Home() {
+  const dispatch = useDispatch();
+  const { products, isLoading, isError, isSuccess, message } = useSelector(
+    (state) => state.products
+  );
+  useEffect(() => {
+    dispatch(getAllProducts());
+  }, []);
+
   const settings = {
     dots: false,
     infinite: true,
@@ -381,32 +387,51 @@ function Home() {
 
       {/* popular products section */}
       <section className="px-10 py-16 bg-white">
-            <h2 className="text-2xl font-bold tracking-tight text-gray-900 capitalize my-2 mb-5 lg:text-left md:text-left text-center px-4">
-              our popular products
-            </h2>
+        <h2 className="text-2xl font-bold tracking-tight text-gray-900 capitalize my-2 mb-5 lg:text-left md:text-left text-center px-4">
+          our popular products
+        </h2>
 
-            <div className="grid lg:grid-cols-4 md:grid-cols-3 grid-cols-1 gap-2 place-items-center">
-    
-              {products.map((product) => <div key={product.id} className="group relative"> <PopularProductsCard product={product}/> </div>)}
+        <div className="grid lg:grid-cols-4 md:grid-cols-3 grid-cols-1 gap-2">
+          {products.map((product) => {
+            if(product.tags.includes("popular") ){
+              return <div key={product?.id} className="group relative">
+              <PopularProductsCard product={product} />{" "}
             </div>
+            }
+          }
+            
+          )}
+        </div>
 
-            <div className="px-32">
-            <Button
-          ripple={false}
-          fullWidth={true}
-          className="bg-blue-gray-900/10 text-blue-gray-900 shadow-none hover:scale-105 hover:shadow-none focus:scale-105 focus:shadow-none active:scale-100 my-5"
-        >
-          Load More
-        </Button>
-            </div>
+        {/* <div className="px-32">
+          <Button
+            ripple={false}
+            fullWidth={true}
+            className="bg-blue-gray-900/10 text-blue-gray-900 shadow-none hover:scale-105 hover:shadow-none focus:scale-105 focus:shadow-none active:scale-100 my-5"
+          >
+            Load More
+          </Button>
+        </div> */}
       </section>
 
-
       {/* famous wrapper */}
-      <section className="bg-gray-200 w-full px-10 grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 place-items-center py-10 gap-5">
-          <FamousCard/>
-          <FamousCard/>
-          <FamousCard/>
+      <section className="px-10 py-16 bg-white w-full">
+      <h2 className="text-2xl font-bold tracking-tight text-gray-900 capitalize my-2 mb-5 lg:text-left md:text-left text-center px-4">
+          famous products
+        </h2>
+      <div className="w-full grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 py-2 gap-5">
+        {products.map((product) => {
+            if(product.tags.includes("famous") ){
+              return <div key={product?.id} >
+              <FamousCard product={product} />{" "}
+            </div>
+            }
+          }
+            
+          )}
+        
+        
+      </div>
       </section>
 
       {/* blog section slider- npm react slick and card material tailwind card */}
@@ -446,8 +471,6 @@ function Home() {
       </section>
 
       {/* special products - pending */}
-
-      
     </div>
   );
 }

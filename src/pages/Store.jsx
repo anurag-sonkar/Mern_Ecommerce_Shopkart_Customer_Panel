@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BreadCrumb } from "../components/BreadCrumb";
 import HelmetTitle from "../components/HelmetTitle";
 import { Input } from "@material-tailwind/react";
@@ -7,63 +7,72 @@ import { FaFilter } from "react-icons/fa";
 import { DrawerFilter } from "../components/DrawerFilter";
 import PopularProductsCard from "../components/PopularProductsCard";
 import { PaginationCompo } from "../components/PaginationCompo";
+import { useDispatch, useSelector } from "react-redux";
+import { getAllProducts } from "../features/products/productSlice";
 
-const products = [
-  {
-    id: 1,
-    name: "Basic Tee",
-    href: "#",
-    imageSrc:
-      "https://images.unsplash.com/photo-1629367494173-c78a56567877?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=927&q=80",
+// const products = [
+//   {
+//     id: 1,
+//     name: "Basic Tee",
+//     href: "#",
+//     imageSrc:
+//       "https://images.unsplash.com/photo-1629367494173-c78a56567877?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=927&q=80",
 
-    imageAlt: "Front of men's Basic Tee in black.",
-    price: "$35",
-    color: "Black",
-  },
-  {
-    id: 2,
-    name: "Basic Tee",
-    href: "#",
-    imageSrc: "../src/assets/tab.jpg",
-    imageAlt: "Front of men's Basic Tee in black.",
-    price: "$35",
-    color: "Black",
-  },
-  {
-    id: 3,
-    name: "Basic Tee",
-    href: "#",
-    imageSrc:
-      "https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg",
-    price: "$35",
-    color: "Black",
-  },
-  {
-    id: 4,
-    name: "Basic Tee",
-    href: "#",
-    imageSrc:
-      "https://images.unsplash.com/photo-1629367494173-c78a56567877?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=927&q=80",
-    imageAlt: "Front of men's Basic Tee in black.",
-    price: "$35",
-    color: "Black",
-  },
-  {
-    id: 5,
-    name: "Basic Tee",
-    href: "#",
-    imageSrc:
-      "https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg",
-    imageAlt: "Front of men's Basic Tee in black.",
-    price: "$35",
-    color: "Black",
-  },
-  // More products...
-];
+//     imageAlt: "Front of men's Basic Tee in black.",
+//     price: "$35",
+//     color: "Black",
+//   },
+//   {
+//     id: 2,
+//     name: "Basic Tee",
+//     href: "#",
+//     imageSrc: "../src/assets/tab.jpg",
+//     imageAlt: "Front of men's Basic Tee in black.",
+//     price: "$35",
+//     color: "Black",
+//   },
+//   {
+//     id: 3,
+//     name: "Basic Tee",
+//     href: "#",
+//     imageSrc:
+//       "https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg",
+//     price: "$35",
+//     color: "Black",
+//   },
+//   {
+//     id: 4,
+//     name: "Basic Tee",
+//     href: "#",
+//     imageSrc:
+//       "https://images.unsplash.com/photo-1629367494173-c78a56567877?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=927&q=80",
+//     imageAlt: "Front of men's Basic Tee in black.",
+//     price: "$35",
+//     color: "Black",
+//   },
+//   {
+//     id: 5,
+//     name: "Basic Tee",
+//     href: "#",
+//     imageSrc:
+//       "https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg",
+//     imageAlt: "Front of men's Basic Tee in black.",
+//     price: "$35",
+//     color: "Black",
+//   },
+//   // More products...
+// ];
 
 function Store() {
   const [openRight, setOpenRight] = React.useState(false);
   const openDrawerRight = () => setOpenRight(true);
+  const dispatch = useDispatch();
+  const { products, isLoading, isError, isSuccess, message } = useSelector(
+    (state) => state.products
+  );
+  useEffect(() => {
+    dispatch(getAllProducts())
+  }, []);
   return (
     <div className="w-full bg-gray-200">
       <HelmetTitle title="Store" />
@@ -280,10 +289,9 @@ function Store() {
             </div>
           </div>
           {/* second-row :  products -  */}
-          <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 place-items-center gap-4 bg-white px-4 py-4 rounded-sm">
-            {products.map((product) => (
+          <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4 bg-white px-4 py-4 rounded-sm">
+            {products && products.length > 0 && products.map((product) => (
               <div key={product.id} className="group relative">
-                {" "}
                 <PopularProductsCard product={product} />{" "}
               </div>
             ))}

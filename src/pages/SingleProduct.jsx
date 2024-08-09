@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import HelmetTitle from "../components/HelmetTitle";
 import { BreadCrumb } from "../components/BreadCrumb";
 import { useParams } from "react-router-dom";
@@ -8,56 +8,65 @@ import { Button } from "@material-tailwind/react";
 import { CiHeart } from "react-icons/ci";
 import { GoGitCompare } from "react-icons/go";
 import ImageMagnifier from "../components/ImageMagnifier";
+import { useDispatch, useSelector } from "react-redux";
+import { getProduct } from "../features/products/productSlice";
 
-let dummyImages = [
-  {
-    asset_id: 1,
-    url: "../src/assets/shirt1.jpg",
-  },
-  {
-    asset_id: 2,
-    url: "../src/assets/shirt2.jpg",
-  },
-  {
-    asset_id: 3,
-    url: "../src/assets/shirt3.jpg",
-  },
-  {
-    asset_id: 4,
-    url: "../src/assets/shirt4.jpg",
-  },
-  {
-    asset_id: 5,
-    url: "../src/assets/shirt5.jpg",
-  },
-  {
-    asset_id: 6,
-    url: "../src/assets/shirt6.jpg",
-  },
-];
-const product = {
-  id: 1,
-  name: "Basic Tee",
-  price: "$35",
-  discountedPrice: "$22",
-  href: "#",
-  imageSrc:
-    "https://images.unsplash.com/photo-1629367494173-c78a56567877?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=927&q=80",
+// let dummyImages = [
+//   {
+//     asset_id: 1,
+//     url: "../src/assets/shirt1.jpg",
+//   },
+//   {
+//     asset_id: 2,
+//     url: "../src/assets/shirt2.jpg",
+//   },
+//   {
+//     asset_id: 3,
+//     url: "../src/assets/shirt3.jpg",
+//   },
+//   {
+//     asset_id: 4,
+//     url: "../src/assets/shirt4.jpg",
+//   },
+//   {
+//     asset_id: 5,
+//     url: "../src/assets/shirt5.jpg",
+//   },
+//   {
+//     asset_id: 6,
+//     url: "../src/assets/shirt6.jpg",
+//   },
+// ];
+// const product = {
+//   id: 1,
+//   name: "Basic Tee",
+//   price: "$35",
+//   discountedPrice: "$22",
+//   href: "#",
+//   imageSrc:
+//     "https://images.unsplash.com/photo-1629367494173-c78a56567877?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=927&q=80",
 
-  imageAlt: "Front of men's Basic Tee in black.",
-  info: {
-    type: "Electronics",
-    color: ["#586952", "#458520", "yellow", "#658520", "skyblue"],
-    brand: "Havells",
-    SKU: "SKU033",
-    Size: ["S", "M", "L"],
-    Availability: "In Stock",
-  },
-};
+//   imageAlt: "Front of men's Basic Tee in black.",
+//   info: {
+//     type: "Electronics",
+//     color: ["#586952", "#458520", "yellow", "#658520", "skyblue"],
+//     brand: "Havells",
+//     SKU: "SKU033",
+//     Size: ["S", "M", "L"],
+//     Availability: "In Stock",
+//   },
+// };
 
 function SingleProduct() {
-  const [imgSrc, setImgSrc] = useState(dummyImages[0].url);
-
+  const dispatch = useDispatch();
+  const {id} = useParams()
+  const { product, isLoading, isError, isSuccess, message } = useSelector(
+    (state) => state.products
+  );
+  // console.log(product,id)
+ 
+  
+  const [imgSrc, setImgSrc] = useState("");
   const toggleProductMouseIn = (e, ele) => {
     setImgSrc(ele.url);
     const parent = e.target.parentElement;
@@ -72,6 +81,17 @@ function SingleProduct() {
       parent.style.outline = "2px solid #fff";
     }
   };
+
+  useEffect(() => {
+    dispatch(getProduct(id))
+  }, [dispatch,id]);
+
+  useEffect(() => {
+    if (product?.images?.length > 0) {
+      setImgSrc(product.images[0].url);
+    }
+  }, [product]);
+
 
   return (
     <div className="w-full bg-gray-200">
@@ -88,9 +108,10 @@ function SingleProduct() {
             {/* grid again - divided 1/8 */}
             <div className="grid grid-cols-9 gap-4">
               <div className="flex flex-col gap-4 py-10">
-                {dummyImages.map((ele) => (
+                {product?.images?.length > 0 ?  (
+                  product.images.map((ele) => (
                   <div
-                    key={ele.asset_id}
+                    key={ele.public_id}
                     className="border-2 rounded-xl overflow-hidden flex justify-center items-center"
                   >
                     <img
@@ -100,7 +121,8 @@ function SingleProduct() {
                       onMouseOut={(e) => toggleProductMouseOut(e)}
                     />
                   </div>
-                ))}
+                ))
+                ) : "No image available"}
               </div>
               <div className="col-span-8 bg-gray-50 rounded-xl lg:px-3 lg:py-4 w-fit px-1 py-1">
                 <ImageMagnifier imgSrc={imgSrc} />
@@ -110,27 +132,26 @@ function SingleProduct() {
 
           {/* Image column 2 - for md, sm (option) */}
           <main className="lg:col-span-4 col-span-8 lg:hidden block">
-            <CarousalSingleProduct images={dummyImages} />
+            <CarousalSingleProduct images={product?.images} />
           </main>
 
           {/* disp column */}
           <main className="lg:col-span-4 col-span-8 bg-gray-50 px-6 py-4">
             <div className="tiles">
-              <h1 className="font-semibold ">
-                POSHAX Men Shirt || Shirt for Men || Casual Shirt for Men
-                (Bubble) || Casual Shirt for Men (Bubble)
+              <h1 className="font-semibold text-lg">
+                {product?.title}
               </h1>
             </div>
 
             <div className="tiles">
-              <p className="font-semibold">$100.00</p>
+              <p className="font-semibold">${product?.price}</p>
               <div className="flex gap-2">
                 <RatingMUI />
                 <p className="text-gray-500">(2 reviews)</p>
               </div>
             </div>
 
-            <div className="tiles flex flex-col gap-1">
+            {/* <div className="tiles flex flex-col gap-1">
               {product.info &&
                 Object.keys(product.info).map((key) => {
                   if (key === "color") {
@@ -185,7 +206,7 @@ function SingleProduct() {
                     );
                   }
                 })}
-            </div>
+            </div> */}
 
             <div className="tiles grid lg:grid-cols-3 grid-cols-2 lg:grid-rows-2 grid-rows-3 gap-6">
               <div className="flex items-center gap-4">
@@ -220,25 +241,11 @@ function SingleProduct() {
 
 
                 {/* discription section */}
-        <section className="lg:mx-10 md:mx-4 sm:mx-2 mt-6">
+        {
+          product?.description ? (<section className="lg:mx-10 md:mx-4 sm:mx-2 mt-6">
           <h1 className="font-semibold text-2xl my-2">Description</h1>
           <div  className="bg-white rounded-md p-5 text-sm text-justify grid gap-5">
-          <p>
-            Waiting and watching. It was all she had done for the past weeks.
-            When you’re locked in a room with nothing but food and drink, that’s
-            about all you can do anyway. She watched as birds flew past the
-            window bolted shut. She couldn’t reach it if she wanted too, with
-            that hole in the floor. She thought she could escape through it but
-            three stories is a bit far down. He read about a hike called the
-            incline in the guidebook. It said it was a strenuous hike and to
-            bring plenty of water. “A beautiful hike to the clouds” described
-            one review. “Not for the faint-hearted,” said another. “Not too bad
-            of a workout”, bragged a third review. I thought I’d hike it when I
-            fly in from Maryland on my day off from the senior citizen's
-            wellness conference. I hiked 2 miles a day around the neighborhood
-            so I could handle a 1.1-mile hike. What a foolish mistake that was
-            for a 70-year-old low-lander.
-          </p>
+          <p dangerouslySetInnerHTML={{ __html: product.description }} />
           <p >
             Waiting and watching. It was all she had done for the past weeks.
             When you’re locked in a room with nothing but food and drink, that’s
@@ -256,7 +263,8 @@ function SingleProduct() {
             for a 70-year-old low-lander.
           </p>
           </div>
-        </section>
+        </section>) : ""
+        }
 
         
         <section className="lg:mx-10 md:mx-4 sm:mx-2 mt-6 bg-white p-4">

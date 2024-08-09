@@ -20,8 +20,8 @@ function CarousalSingleProduct({ images }) {
   return (
     <div className="slider-container">
       <Slider {...settings}>
-        {images.map((ele) => (
-          <div key={ele.asset_id}>
+        {images?.map((ele) => (
+          <div key={ele.public_id}>
           <img
             src={ele.url}
             alt="image 1"

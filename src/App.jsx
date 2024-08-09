@@ -1,5 +1,5 @@
-import React from 'react'
-import { Routes, Route } from 'react-router-dom'
+import React, { useEffect } from 'react'
+import { Routes, Route, useNavigate } from 'react-router-dom'
 import Layout from './components/Layout'
 import Home from './pages/Home'
 import About from './pages/About'
@@ -18,10 +18,27 @@ import SingleBlog from './pages/SingleBlog'
 import SingleProduct from './pages/SingleProduct'
 import AddToCart from './pages/AddToCart'
 import Checkout from './pages/Checkout'
+import { useDispatch, useSelector } from 'react-redux'
+import ScrollToTop from './components/ScrollToTop'
+
 
 function App() {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const { user, isLoading, isError, isSuccess, message } = useSelector(
+    (state) => state.auth
+  );
+
+  useEffect(() => {
+    // console.log( user, isLoading, isError, isSuccess, message )
+    if (user) {
+      navigate("/");
+    } 
+  }, [dispatch,user]);
   return (
     <>
+      <ScrollToTop />
       <Routes>
         <Route path='/' element={<Layout/>}>
           <Route index element={<Home/>} />

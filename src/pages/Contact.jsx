@@ -11,9 +11,42 @@ import { FaHome } from "react-icons/fa";
 import { IoMdCall } from "react-icons/io";
 import { MdEmail } from "react-icons/md";
 import { FaInfo } from "react-icons/fa6";
+import { useDispatch } from "react-redux";
+import { createEnquire } from "../features/enquires/enquiresSlice";
+import { toast, Bounce } from "react-toastify";
 
 
 function Contact() {
+  const dispatch = useDispatch()
+  const handleEnquiry = (e)=>{
+    e.preventDefault()
+    const formData = new FormData(e.target)
+    const data = Object.fromEntries(formData.entries())
+    const enquiryPromise =  dispatch(createEnquire(data)).unwrap()
+    toast.promise(
+      enquiryPromise,
+      {
+        pending: "Creating enquiry...",
+        success: "Enquiry created successfully!",
+        error: `Enquiry failed!`,
+      },
+      {
+        position: "top-center",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        transition: Bounce,
+      }
+    );
+
+    enquiryPromise.then(()=>{
+      form.reset(); 
+    })
+  }
   return (
     <div className="w-full bg-gray-200">
       <HelmetTitle title="Contact" />
@@ -28,22 +61,22 @@ function Contact() {
       </div>
 
       <div className="grid lg:grid-cols-2 lg:gap-0 gap-16 grid-cols-1 my-5 bg-white rounded-md lg:px-10 md:px-12 px-4 lg:py-10 py-8">
-        <div className="grid gap-5">
+        <form className="grid gap-5" onSubmit={handleEnquiry}>
           <h1 className="text-3xl font-semibold capitalize">contact</h1>
           <div className="lg:w-96">  
-          <Input label="Name" icon={<SiNamecheap size={20} />} />
+          <Input label="Name" icon={<SiNamecheap size={20} />} name="name"/>
           </div>
           <div className="lg:w-96">  
-          <Input label="Email" icon={<MdMarkEmailRead size={20} />} />
+          <Input label="Email" icon={<MdMarkEmailRead size={20} />} name="email"/>
           </div>
           <div className="lg:w-96">  
-          <Input label="Phone" icon={<FaPhone size={20} />} />
+          <Input label="Phone" icon={<FaPhone size={20} />} name="mobile" />
           </div>
           <div className="lg:w-96">  
-          <Textarea label="Comment" />
+          <Textarea label="Comment" name="comment"/>
           </div>
-          <Button className="w-36">Send</Button>
-        </div>
+          <Button className="w-36" type="submit">Send</Button>
+        </form>
 
         <div className="flex flex-col gap-4 text-sm">
         <h1 className="text-3xl font-semibold capitalize">get in touch with us</h1>
