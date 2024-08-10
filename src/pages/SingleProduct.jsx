@@ -10,52 +10,8 @@ import { GoGitCompare } from "react-icons/go";
 import ImageMagnifier from "../components/ImageMagnifier";
 import { useDispatch, useSelector } from "react-redux";
 import { getProduct } from "../features/products/productSlice";
-
-// let dummyImages = [
-//   {
-//     asset_id: 1,
-//     url: "../src/assets/shirt1.jpg",
-//   },
-//   {
-//     asset_id: 2,
-//     url: "../src/assets/shirt2.jpg",
-//   },
-//   {
-//     asset_id: 3,
-//     url: "../src/assets/shirt3.jpg",
-//   },
-//   {
-//     asset_id: 4,
-//     url: "../src/assets/shirt4.jpg",
-//   },
-//   {
-//     asset_id: 5,
-//     url: "../src/assets/shirt5.jpg",
-//   },
-//   {
-//     asset_id: 6,
-//     url: "../src/assets/shirt6.jpg",
-//   },
-// ];
-// const product = {
-//   id: 1,
-//   name: "Basic Tee",
-//   price: "$35",
-//   discountedPrice: "$22",
-//   href: "#",
-//   imageSrc:
-//     "https://images.unsplash.com/photo-1629367494173-c78a56567877?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=927&q=80",
-
-//   imageAlt: "Front of men's Basic Tee in black.",
-//   info: {
-//     type: "Electronics",
-//     color: ["#586952", "#458520", "yellow", "#658520", "skyblue"],
-//     brand: "Havells",
-//     SKU: "SKU033",
-//     Size: ["S", "M", "L"],
-//     Availability: "In Stock",
-//   },
-// };
+import { addToCart } from "../features/cart/cartSlice";
+import { toast, Bounce } from "react-toastify";
 
 function SingleProduct() {
   const dispatch = useDispatch();
@@ -63,7 +19,9 @@ function SingleProduct() {
   const { product, isLoading, isError, isSuccess, message } = useSelector(
     (state) => state.products
   );
-  // console.log(product,id)
+  const [count , setCount] = useState(1)
+  const [selectedColor ,setSelectedColor] = useState(product?.color?.[0]?.color)
+  // console.log(product  , "ID:" , id , "COLOR",color)
  
   
   const [imgSrc, setImgSrc] = useState("");
@@ -82,6 +40,34 @@ function SingleProduct() {
     }
   };
 
+  const handleColor = (event,color)=>{
+    event.target.border = '1px solid red'
+    setSelectedColor(color)
+
+  }
+  const handleAddToCart = ()=>{
+    const addToCartPromise =  dispatch(addToCart({
+      productId:product._id,
+      color:selectedColor,
+      count:count,
+    })).unwrap()
+
+    addToCartPromise.then(()=>{
+      toast.info('🦄 Wow! item added to cart!', {
+        position: "top-center",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        transition: Bounce,
+        });
+    })
+
+  }
+
   useEffect(() => {
     dispatch(getProduct(id))
   }, [dispatch,id]);
@@ -90,6 +76,10 @@ function SingleProduct() {
     if (product?.images?.length > 0) {
       setImgSrc(product.images[0].url);
     }
+
+    if (product?.color?.length > 0) {
+      setSelectedColor(product.color[0].color);
+    }
   }, [product]);
 
 
@@ -97,7 +87,7 @@ function SingleProduct() {
     <div className="w-full bg-gray-200">
       <HelmetTitle title="Product Name" />
       <div className="bg-white lg:px-10 px-5 py-1 flex justify-between items-center">
-        <BreadCrumb title="Product Name" />
+        <BreadCrumb title={product?.title || "product"} />
       </div>
 
       {/* grid container - 3/2/1 */}
@@ -138,21 +128,21 @@ function SingleProduct() {
           {/* disp column */}
           <main className="lg:col-span-4 col-span-8 bg-gray-50 px-6 py-4">
             <div className="tiles">
-              <h1 className="font-semibold text-lg">
+              <h1 className="font-semibold lg:text-2xl md:text-2xl text-xl">
                 {product?.title}
               </h1>
             </div>
 
-            <div className="tiles">
-              <p className="font-semibold">${product?.price}</p>
+            <div className="tiles grid gap-2">
+              <p className="font-semibold text-xl">${product?.price}</p>
               <div className="flex gap-2">
                 <RatingMUI />
                 <p className="text-gray-500">(2 reviews)</p>
               </div>
             </div>
 
-            {/* <div className="tiles flex flex-col gap-1">
-              {product.info &&
+            <div className="tiles flex flex-col gap-1">
+              {/* {product.info &&
                 Object.keys(product.info).map((key) => {
                   if (key === "color") {
                     return (
@@ -205,20 +195,75 @@ function SingleProduct() {
                       </div>
                     );
                   }
-                })}
-            </div> */}
+                })} */}
 
+              <div className="flex gap-12 text-lg">
+                <div className="font-semibold  capitalize w-32">category:</div>
+                <div className="capitalize w-full text-left font-semibold text-gray-700">{product.category}</div>
+              </div>
+              <div className="flex gap-12 text-lg">
+                <div className="font-semibold  capitalize w-32">brand:</div>
+                <div className="capitalize w-full text-left font-semibold text-gray-700">{product.brand}</div>
+              </div>
+              <div className="flex gap-12 text-lg">
+                <div className="font-semibold  capitalize w-32">qt. left:</div>
+                <div className="capitalize w-full text-left font-semibold text-gray-700">{product.quantity}</div>
+              </div>
+
+              {/* color */}
+              <div className="flex gap-12 text-lg my-3">
+      <div className="font-semibold capitalize w-32">colors:</div>
+      <div className="capitalize w-full text-left font-semibold text-gray-700 flex gap-1 flex-wrap">
+        {product?.color?.map((ele) => (
+          <div
+            key={ele._id}
+            className={`w-7 h-7 rounded-full cursor-pointer ${selectedColor === ele.color ? 'border-2 border-red-500 p-1' : 'border-2 border-transparent p-1'}`}
+            style={{ backgroundColor: `${ele.color}` }}
+            onClick={(event) => handleColor(event, ele.color)}
+          ></div>
+        ))}
+      </div>
+    </div>
+              {/* tags */}
+              <div className="flex gap-12 text-lg my-3">
+                <div className="font-semibold  capitalize w-32">tags:</div>
+                <div className="flex flex-wrap gap-4 items-center w-full text-left font-semibold text-gray-700">{product.tags?.map((ele)=><span className="bg-[#FF9199] text-white px-4 rounded-full text-center">{ele + " "}</span>)}</div>
+              </div>
+
+              {/* availability */}
+              <div className="flex gap-12 text-lg">
+                <div className="font-semibold  capitalize w-32">availability:</div>
+                <div className="capitalize w-full text-left font-semibold text-gray-700">{product.quantity > 0 ? "instock" : "out of stock"}</div>
+              </div>
+
+              {/* listing date */}
+              <div className="flex gap-12 text-lg">
+                <div className="font-semibold  capitalize w-32">listed on:</div>
+                <div className="capitalize w-full text-left font-semibold text-gray-700">{new Date(product?.createdAt).toLocaleString()}</div>
+              </div>
+
+
+              
+              
+
+
+            </div>
+
+
+            {/** field & btn */}
             <div className="tiles grid lg:grid-cols-3 grid-cols-2 lg:grid-rows-2 grid-rows-3 gap-6">
               <div className="flex items-center gap-4">
                 <label className="font-semibold">Quantity</label>
                 <input
                   type="number"
                   className="w-12 text-center border border-gray-500 rounded-sm"
+                  value={count}
+                  onChange={(e)=>setCount(e.target.value)}
                 />
               </div>
 
               <div className="flex gap-4 items-center col-span-2">
-                <Button className="rounded-full bg-[#F44336]">
+                <Button className="rounded-full bg-[#F44336]" onClick={handleAddToCart}>
                   add to cart
                 </Button>
                 <Button className="rounded-full ">buy it now</Button>

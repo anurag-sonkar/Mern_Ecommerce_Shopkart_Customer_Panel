@@ -21,6 +21,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { toast, Bounce } from "react-toastify";
 import { signOut } from "../features/auth/authSlice";
+import { getCart } from "../features/cart/cartSlice";
 
 const navigation = [
   { name: "Home", href: "/", current: true },
@@ -60,10 +61,10 @@ function Header() {
   const { user, isLoading, isError, isSuccess, message } = useSelector(
     (state) => state.auth
   );
-
+  const {cart} = useSelector(state=>state.cart)
   const [profile,setProfile] = useState(user?.imgpath?.url || "../src/assets/profile.png")
-  // console.log(user,profile)
-
+  const cartTotalItems = cart?.products?.reduce((acc, product) => acc + product.count, 0)
+  // console.log(cartTotalItems)
   const handleSignOut =  (e)=>{
     e.preventDefault();
     const signOutPromise = dispatch(signOut()).unwrap()
@@ -94,6 +95,7 @@ function Header() {
   useEffect(
     ()=>{
       setProfile(user?.imgpath?.url || "../src/assets/profile.png")
+      dispatch(getCart())
     },[dispatch]
   )
 
@@ -180,7 +182,7 @@ function Header() {
                 className="icon_wrapper relative cursor-pointer"
               >
                 <FaOpencart size={40} color="white" className="z-10" />
-                <CartCountBadge size="w-[22px] h-[22px]" value={23} />
+                <CartCountBadge size="w-[22px] h-[22px]" count={cartTotalItems} />
               </Link>
               {/* Profile dropdown */}
               <Menu as="div" className="relative ml-6">

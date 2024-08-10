@@ -367,6 +367,37 @@ function Home() {
         </div>
       </section>
 
+      {/* featured products section */}
+      <section className="px-10 py-16 bg-gray-200 ">
+        <h2 className="text-3xl font-bold tracking-tight text-gray-900 capitalize my-2 mb-5 lg:text-left md:text-left text-center px-4">
+          featured 
+        </h2>
+
+        <div className="grid lg:grid-cols-4 md:grid-cols-3 grid-cols-1 gap-2">
+          {products.map((product) => {
+            if(product.tags.includes("featured") ){
+              return <div key={product?.id} className="group relative">
+              <PopularProductsCard product={product} />{" "}
+            </div>
+            }
+          }
+            
+          )}
+        </div>
+
+        {/* <div className="px-32">
+          <Button
+            ripple={false}
+            fullWidth={true}
+            className="bg-blue-gray-900/10 text-blue-gray-900 shadow-none hover:scale-105 hover:shadow-none focus:scale-105 focus:shadow-none active:scale-100 my-5"
+          >
+            Load More
+          </Button>
+        </div> */}
+      </section>
+
+
+
       {/* marquee brand section */}
       <section className="bg-gray-200 py-16 px-10 shadow-2xl">
         <Marquee
@@ -402,16 +433,6 @@ function Home() {
             
           )}
         </div>
-
-        {/* <div className="px-32">
-          <Button
-            ripple={false}
-            fullWidth={true}
-            className="bg-blue-gray-900/10 text-blue-gray-900 shadow-none hover:scale-105 hover:shadow-none focus:scale-105 focus:shadow-none active:scale-100 my-5"
-          >
-            Load More
-          </Button>
-        </div> */}
       </section>
 
       {/* famous wrapper */}
@@ -423,7 +444,8 @@ function Home() {
         {products.map((product) => {
             if(product.tags.includes("famous") ){
               return <div key={product?.id} >
-              <FamousCard product={product} />{" "}
+              {/* <FamousCard product={product} />  --- will see in future*/}
+              <PopularProductsCard product={product} />
             </div>
             }
           }

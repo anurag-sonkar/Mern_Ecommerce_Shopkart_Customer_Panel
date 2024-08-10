@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { Routes, Route, useNavigate } from 'react-router-dom'
+import { Routes, Route, useNavigate, useLocation } from 'react-router-dom'
 import Layout from './components/Layout'
 import Home from './pages/Home'
 import About from './pages/About'
@@ -25,6 +25,8 @@ import ScrollToTop from './components/ScrollToTop'
 function App() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const {pathname} = useLocation() // will be on same page after reload page
+ 
 
   const { user, isLoading, isError, isSuccess, message } = useSelector(
     (state) => state.auth
@@ -33,7 +35,8 @@ function App() {
   useEffect(() => {
     // console.log( user, isLoading, isError, isSuccess, message )
     if (user) {
-      navigate("/");
+      navigate(pathname);
+      // navigate('/');
     } 
   }, [dispatch,user]);
   return (
