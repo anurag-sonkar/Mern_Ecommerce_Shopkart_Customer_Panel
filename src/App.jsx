@@ -20,25 +20,26 @@ import AddToCart from './pages/AddToCart'
 import Checkout from './pages/Checkout'
 import { useDispatch, useSelector } from 'react-redux'
 import ScrollToTop from './components/ScrollToTop'
+import PaymentSuccess from './pages/PaymentSuccess'
 
 
 function App() {
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const {pathname} = useLocation() // will be on same page after reload page
+  // const navigate = useNavigate();
+  // const dispatch = useDispatch();
+  // const {pathname} = useLocation() // will be on same page after reload page
  
 
-  const { user, isLoading, isError, isSuccess, message } = useSelector(
-    (state) => state.auth
-  );
+  // const { user, isLoading, isError, isSuccess, message } = useSelector(
+  //   (state) => state.auth
+  // );
 
-  useEffect(() => {
-    // console.log( user, isLoading, isError, isSuccess, message )
-    if (user) {
-      navigate(pathname);
-      // navigate('/');
-    } 
-  }, [dispatch,user]);
+  // useEffect(() => {
+  //   // console.log( user, isLoading, isError, isSuccess, message )
+  //   if (user) {
+  //     navigate(pathname);
+  //     // navigate('/');
+  //   } 
+  // }, [dispatch,user]);
   return (
     <>
       <ScrollToTop />
@@ -56,6 +57,7 @@ function App() {
           <Route path='/auth' element={<AuthenticationForm/>} />
           <Route path='/addtocart' element={<AddToCart/>} />
           <Route path='/checkout' element={<Checkout/>} />
+          <Route path="paymentsuccess" element={<PaymentSuccess />} />
           {/* small screen auth handle */}
           <Route path='/signup' element={<SignupForm/>} />
           <Route path='/login' element={<LoginForm/>} />
