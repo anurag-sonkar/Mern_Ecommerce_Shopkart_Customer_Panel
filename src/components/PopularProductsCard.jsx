@@ -14,7 +14,7 @@ import { FcLike } from "react-icons/fc";
 import { IoCartOutline } from "react-icons/io5";
 import { FaRegEye } from "react-icons/fa";
 import { TbArrowsCross } from "react-icons/tb";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { addToWishlist } from "../features/products/productSlice";
 import { IoMdHeart } from "react-icons/io";
@@ -25,29 +25,47 @@ function PopularProductsCard({ product }) {
   const [toggleWishlist, setToggleWishlist] = useState(false);
   const { pathname } = useLocation();
   const dispatch = useDispatch();
+  const navigate = useNavigate()
   const {cart , isLoading} = useSelector(state=>state.cart)
   const [color ,setColor] = useState(product.color[0].color)
   // const [cartItems, setCartItems] = useState([]); 
-  
+  const getUserFromLocalStorage = JSON.parse(localStorage.getItem('user'))
+
   const handleAddToCart = (event) => {
     event.preventDefault();
     event.stopPropagation();
     
-    const prodId = product?._id
-    const cartProducts = cart?.products 
-    // console.log("PRODUCT",prodId)
-    // console.log("CART",cartProducts)
-    let res = cartProducts?.filter(ele=>ele.product === prodId && ele.color === color)
-    // console.log("RESULT",res)
-
-    const addToCartPromise =  dispatch(addToCart({
-      productId:product._id,
-      color:color,
-      count:res?.length > 0 ? res[0].count+1 : 1,
-    })).unwrap()
-
-    addToCartPromise.then(()=>{
-      toast.info('🦄 Wow! item added to cart!', {
+    if(getUserFromLocalStorage?.result?.token !== undefined){
+      const prodId = product?._id
+      const cartProducts = cart?.products 
+      // console.log("PRODUCT",prodId)
+      // console.log("CART",cartProducts)
+      let res = cartProducts?.filter(ele=>ele.product === prodId && ele.color === color)
+      // console.log("RESULT",res)
+  
+      const addToCartPromise =  dispatch(addToCart({
+        productId:product._id,
+        color:color,
+        count:res?.length > 0 ? res[0].count+1 : 1,
+      })).unwrap()
+  
+      addToCartPromise.then(()=>{
+        toast.info('🦄 Wow! item added to cart!', {
+          position: "top-center",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+          transition: Bounce,
+          });
+      })
+      
+    }else{
+      navigate('/auth')
+      toast.info('Login now', {
         position: "top-center",
         autoClose: 2000,
         hideProgressBar: false,
@@ -58,8 +76,7 @@ function PopularProductsCard({ product }) {
         theme: "dark",
         transition: Bounce,
         });
-    })
-    
+    }
   };
   
   

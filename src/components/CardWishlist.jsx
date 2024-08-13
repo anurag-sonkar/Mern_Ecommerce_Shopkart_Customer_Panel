@@ -9,27 +9,48 @@ import {
 import { toast, Bounce } from "react-toastify";
 import { addToWishlist } from "../features/products/productSlice";
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 export function CardWishlist(props) {
   const dispatch = useDispatch();
+  const navigate = useNavigate()
 
+  const getUserFromLocalStorage = JSON.parse(localStorage.getItem('user'))
+  
   const handleWishlistClick = (event) => {
     event.preventDefault();
-    const addWishlistPromise = dispatch(addToWishlist(props._id)).unwrap();
-    toast.promise(
-      addWishlistPromise,
-      {
-        pending: "Adding to wishlist...",
-        success: {
-          render() {
-            // Trigger the parent's refresh function after success
-            props.refreshWishlist();
-            return "Added to wishlist";
-          }
+    event.stopPropagation();
+
+    if(getUserFromLocalStorage?.result?.token !== undefined){
+      const addWishlistPromise = dispatch(addToWishlist(props._id)).unwrap();
+      toast.promise(
+        addWishlistPromise,
+        {
+          pending: "Adding to wishlist...",
+          success: {
+            render() {
+              // Trigger the parent's refresh function after success
+              props.refreshWishlist();
+              return "Added to wishlist";
+            }
+          },
+          error: "Failed to add to wishlist",
         },
-        error: "Failed to add to wishlist",
-      },
-      {
+        {
+          position: "top-center",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+          transition: Bounce,
+        }
+      );
+    }else{
+      navigate('/auth')
+      toast.info('Login now', {
         position: "top-center",
         autoClose: 2000,
         hideProgressBar: false,
@@ -39,8 +60,8 @@ export function CardWishlist(props) {
         progress: undefined,
         theme: "dark",
         transition: Bounce,
-      }
-    );
+        });
+    }
   };
 
   return (

@@ -21,11 +21,15 @@ import Checkout from './pages/Checkout'
 import { useDispatch, useSelector } from 'react-redux'
 import ScrollToTop from './components/ScrollToTop'
 import PaymentSuccess from './pages/PaymentSuccess'
+import { getCart } from './features/cart/cartSlice'
+import ProtectedRoutes from './pages/routing/ProtectedRoutes'
+import Orders from './pages/Orders'
+import Profile from './pages/Profile'
 
 
 function App() {
   // const navigate = useNavigate();
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
   // const {pathname} = useLocation() // will be on same page after reload page
  
 
@@ -40,6 +44,12 @@ function App() {
   //     // navigate('/');
   //   } 
   // }, [dispatch,user]);
+
+  
+  // )
+  // console.log(JSON.parse(localStorage.getItem('user'))?.result?.token)
+
+ 
   return (
     <>
       <ScrollToTop />
@@ -53,9 +63,11 @@ function App() {
           <Route path='/blogs' element={<Blogs/>} />
           <Route path='/blog/:id' element={<SingleBlog/>} />
           <Route path='/compare-products' element={<CompareProducts/>} />
-          <Route path='/whishlist' element={<Wishlist/>} />
+          <Route path='/whishlist' element={<ProtectedRoutes><Wishlist/></ProtectedRoutes>} />
+          <Route path='/orders' element={<ProtectedRoutes><Orders/></ProtectedRoutes>} />
+          <Route path='/profile' element={<ProtectedRoutes><Profile/></ProtectedRoutes>} />
           <Route path='/auth' element={<AuthenticationForm/>} />
-          <Route path='/addtocart' element={<AddToCart/>} />
+          <Route path='/addtocart' element={<ProtectedRoutes><AddToCart/></ProtectedRoutes> } />
           <Route path='/checkout' element={<Checkout/>} />
           <Route path="paymentsuccess" element={<PaymentSuccess />} />
           {/* small screen auth handle */}

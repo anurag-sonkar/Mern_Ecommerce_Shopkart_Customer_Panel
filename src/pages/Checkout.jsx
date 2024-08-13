@@ -27,7 +27,7 @@ function Checkout() {
 
   /* */
   const [shippingInfo,setShippingInfo] = useState(addresses?.details?.[0]?._id || "")
-  console.log(shippingInfo)
+  // console.log(shippingInfo)
 
   const handleAutoFill = () => {
     // lastest address
@@ -96,6 +96,10 @@ function Checkout() {
 
   const amount = cart?.cartTotal
   const checkoutHandler = async () => {
+    if(!shippingInfo) {
+      alert("please select address")
+      return
+    }
     try {
       const { data: { order } } = await axios.post("http://localhost:8000/checkout", {
         amount
@@ -164,6 +168,10 @@ function Checkout() {
     dispatch(getAllAddress());
   }, [dispatch]);
 
+  useEffect(()=>{
+    setShippingInfo(addresses?.details?.[0]?._id || "")
+  },[handleCreateNewAddress])
+  
 
   return (
     <div className="font-[sans-serif] bg-white">

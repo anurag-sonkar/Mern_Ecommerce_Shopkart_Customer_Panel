@@ -61,13 +61,18 @@ function Header() {
   const { user, isLoading, isError, isSuccess, message } = useSelector(
     (state) => state.auth
   );
-  const {cart} = useSelector(state=>state.cart)
-  const [profile,setProfile] = useState(user?.imgpath?.url || "../src/assets/profile.png")
-  const cartTotalItems = cart?.products?.reduce((acc, product) => acc + product.count, 0)
+  const { cart } = useSelector((state) => state.cart);
+  const [profile, setProfile] = useState(
+    user?.imgpath?.url || "../src/assets/profile.png"
+  );
+  const cartTotalItems = cart?.products?.reduce(
+    (acc, product) => acc + product.count,
+    0
+  );
   // console.log(cartTotalItems)
-  const handleSignOut =  (e)=>{
+  const handleSignOut = (e) => {
     e.preventDefault();
-    const signOutPromise = dispatch(signOut()).unwrap()
+    const signOutPromise = dispatch(signOut()).unwrap();
     toast.promise(
       signOutPromise,
       {
@@ -88,16 +93,15 @@ function Header() {
       }
     );
 
-    
-  }
+    signOutPromise.then(() => {
+      navigate("/");
+    });
+  };
 
-
-  useEffect(
-    ()=>{
-      setProfile(user?.imgpath?.url || "../src/assets/profile.png")
-      dispatch(getCart())
-    },[dispatch]
-  )
+  useEffect(() => {
+    setProfile(user?.imgpath?.url || "../src/assets/profile.png");
+    dispatch(getCart());
+  }, [dispatch, user]);
 
   // handing navigation based on screen lg / md-sm
   const handleNavigation = () => {
@@ -174,78 +178,94 @@ function Header() {
               </div>
             </div>
 
-            {
-              user ? <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-              {/* <FaOpencart /> */}
-              <Link
-                to="/addtocart"
-                className="icon_wrapper relative cursor-pointer"
+            {user ? (
+              <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+              <div className="flex gap-2 mx-5 text-gray-500 capitalize items-center font-semibold">
+                <span className="text-2xl">welcome!</span>
+                <span className="text-xl">{user?.name?.split(" ")[0]}</span>
+              </div>
+                {/* <FaOpencart /> */}
+                <Link
+                  to="/addtocart"
+                  className="icon_wrapper relative cursor-pointer"
+                >
+                  <FaOpencart size={40} color="white" className="z-10" />
+                  <CartCountBadge
+                    size="w-[22px] h-[22px]"
+                    count={cartTotalItems}
+                  />
+                </Link>
+                {/* Profile dropdown */}
+                <Menu as="div" className="relative ml-6">
+                  <div>
+                    <MenuButton className="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
+                      <span className="absolute -inset-1.5" />
+                      <span className="sr-only">Open user menu</span>
+                      <img
+                        alt=""
+                        src={profile}
+                        className="h-10 w-10 rounded-full object-cover"
+                      />
+                    </MenuButton>
+                  </div>
+
+                  <MenuItems
+                    transition
+                    className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
+                  >
+                    <MenuItem>
+                      <Link
+                        to="/profile"
+                        className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100"
+                      >
+                        My Profile
+                      </Link>
+                    </MenuItem>
+                    <MenuItem>
+                      <Link
+                        to="/whishlist"
+                        className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100"
+                      >
+                        Wishlist
+                      </Link>
+                    </MenuItem>
+                    <MenuItem>
+                      <Link
+                        to="/compare-products"
+                        className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100"
+                      >
+                        Compare Products
+                      </Link>
+                    </MenuItem>
+                    <MenuItem>
+                      <Link
+                        to="/orders"
+                        className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100"
+                      >
+                        My Orders
+                      </Link>
+                    </MenuItem>
+                    <MenuItem>
+                      <button
+                        onClick={handleSignOut}
+                        className="w-full text-left block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100"
+                      >
+                        Sign out
+                      </button>
+                    </MenuItem>
+                  </MenuItems>
+                </Menu>
+              </div>
+            ) : (
+              <Button
+                type="primary"
+                className="bg-[#F44336] shadow-2xl text-lg py-[18px]"
+                icon={<UserOutlined style={{ fontSize: "1.5rem" }} />}
+                onClick={handleNavigation}
               >
-                <FaOpencart size={40} color="white" className="z-10" />
-                <CartCountBadge size="w-[22px] h-[22px]" count={cartTotalItems} />
-              </Link>
-              {/* Profile dropdown */}
-              <Menu as="div" className="relative ml-6">
-                <div>
-                  <MenuButton className="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
-                    <span className="absolute -inset-1.5" />
-                    <span className="sr-only">Open user menu</span>
-                    <img
-                      alt=""
-                      src={profile}
-                      className="h-10 w-10 rounded-full object-cover"
-                    />
-                  </MenuButton>
-                </div>
-                
-                <MenuItems
-                  transition
-                  className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
-                >
-                  <MenuItem>
-                    <Link
-                      to="/profile"
-                      className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100"
-                    >
-                      Your Profile
-                    </Link>
-                  </MenuItem>
-                  <MenuItem>
-                    <Link
-                      to="/whishlist"
-                      className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100"
-                    >
-                      Wishlist
-                    </Link>
-                  </MenuItem>
-                  <MenuItem>
-                    <Link
-                      to="/compare-products"
-                      className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100"
-                    >
-                      Compare Products
-                    </Link>
-                  </MenuItem>
-                  <MenuItem>
-                    <button
-                      onClick={handleSignOut}
-                      className="w-full text-left block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100"
-                    >
-                      Sign out
-                    </button>
-                  </MenuItem>
-                </MenuItems>
-              </Menu>
-            </div> : <Button
-                  type="primary"
-                  className="bg-[#F44336] shadow-2xl text-lg py-[18px]"
-                  icon={<UserOutlined style={{ fontSize: "1.5rem" }} />}
-                  onClick={handleNavigation}
-                >
-                  Login
-                </Button>
-            }
-            
+                Login
+              </Button>
+            )}
           </div>
         </div>
 
@@ -271,7 +291,7 @@ function Header() {
         </DisclosurePanel>
       </Disclosure>
 
-        <div className="lg:px-10 px-5 py-2 bg-gray-800 lg:flex md:flex justify-between">
+      <div className="lg:px-10 px-5 py-2 bg-gray-800 lg:flex md:flex justify-between">
         <div className="flex items-center">
           <div>
             <TbCategory size={30} color="white" />

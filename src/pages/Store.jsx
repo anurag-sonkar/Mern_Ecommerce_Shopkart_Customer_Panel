@@ -92,7 +92,6 @@ function Store() {
       {/* store */}
       <div className="grid grid-cols-12 capitalize lg:px-10 px-5 py-5 gap-4">
         {/* filter - for only lg screen  , md&sm-screen filter is in DrawerFilter*/}
-
         <div className="col-span-3 lg:block hidden">
           {/* filter-card :shop by categories*/}
           <div className="filter-card">
