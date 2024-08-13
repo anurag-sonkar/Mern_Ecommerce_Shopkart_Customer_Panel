@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import authService from './authService'
+import { toast, Bounce } from "react-toastify";
 
 const getUserFromLocalStorage = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null
 
@@ -51,6 +52,26 @@ export const signOut = createAsyncThunk('auth/signOut' , async(_,thunkAPI) =>{
         
     }
 })
+
+export const forgotPassword = createAsyncThunk('auth/forgotPassword' , async(data,thunkAPI) =>{
+    try {
+        return await authService.forgotPassword(data)
+    } catch (error) {
+        return thunkAPI.rejectWithValue(error)
+        
+    }
+})
+
+export const resetPassword = createAsyncThunk('auth/resetPassword' , async(data,thunkAPI) =>{
+    try {
+        console.log(data)
+        return await authService.resetPassword(data)
+    } catch (error) {
+        return thunkAPI.rejectWithValue(error)
+        
+    }
+})
+
 
 const authSlice = createSlice({
   name: 'auth',
@@ -117,6 +138,64 @@ const authSlice = createSlice({
         
     })
     .addCase(signOut.rejected,(state,action)=>{
+        state.isLoading = false
+        state.isError = true
+        state.isSuccess = false
+        state.user = null
+        state.message = action.payload.message
+    })
+    .addCase(forgotPassword.pending,(state)=>{
+        state.isLoading = true
+    })
+    .addCase(forgotPassword.fulfilled,(state,action)=>{
+        state.isLoading = false
+        state.isSuccess = true
+        // state.user = null
+        if(state.isSuccess) {
+            toast.success('password reset link send successfully to your email', {
+                position: "top-center",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+                transition: Bounce,
+                });
+        }
+        
+    })
+    .addCase(forgotPassword.rejected,(state,action)=>{
+        state.isLoading = false
+        state.isError = true
+        state.isSuccess = false
+        state.user = null
+        state.message = action.payload.message
+    })
+    .addCase(resetPassword.pending,(state)=>{
+        state.isLoading = true
+    })
+    .addCase(resetPassword.fulfilled,(state,action)=>{
+        state.isLoading = false
+        state.isSuccess = true
+        // state.user = null
+        if(state.isSuccess){
+            toast.success('password reset successfully Login now', {
+                position: "top-center",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+                transition: Bounce,
+            });
+        }
+        
+    })
+    .addCase(resetPassword.rejected,(state,action)=>{
         state.isLoading = false
         state.isError = true
         state.isSuccess = false

@@ -17,8 +17,10 @@ const signOut = async ()=>{
     const response = await axios.put(`${auth_base_url}/logout`,{}, config)
     if(response.data){
         if(localStorage.getItem('user')) {
-            localStorage.removeItem('user')
+            // localStorage.removeItem('user')
+            localStorage.clear()
           }
+
     }
     // console.log(response.data)
     return response.data
@@ -43,11 +45,27 @@ const getWishlist = async ()=>{
     return response.data
 }
 
+const forgotPassword = async (data)=>{
+    const response = await axios.post(`${auth_base_url}/auth/forgot-password` , data)
+    console.log(response)
+    return response.data
+}
 
+const resetPassword = async (data)=>{
+    try {
+        const {password ,token} = data
+    const response = await axios.put(`${auth_base_url}/auth/reset-password/${token}` , {password})
+    console.log(response)
+    return response.data
+    } catch (error) {
+        return error.message
+        
+    }
+}
 
 
 const authService = {
-    login,signOut,register,getWishlist
+    login,signOut,register,getWishlist,forgotPassword,resetPassword
 }
 
 export default authService;

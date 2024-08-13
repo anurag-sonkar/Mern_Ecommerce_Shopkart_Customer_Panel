@@ -24,7 +24,9 @@ import PaymentSuccess from './pages/PaymentSuccess'
 import { getCart } from './features/cart/cartSlice'
 import ProtectedRoutes from './pages/routing/ProtectedRoutes'
 import Orders from './pages/Orders'
-import Profile from './pages/Profile'
+import Profile from './pages/MyAccount'
+import Address from './pages/Address'
+import MyAccount from './pages/MyAccount'
 
 
 function App() {
@@ -65,7 +67,8 @@ function App() {
           <Route path='/compare-products' element={<CompareProducts/>} />
           <Route path='/whishlist' element={<ProtectedRoutes><Wishlist/></ProtectedRoutes>} />
           <Route path='/orders' element={<ProtectedRoutes><Orders/></ProtectedRoutes>} />
-          <Route path='/profile' element={<ProtectedRoutes><Profile/></ProtectedRoutes>} />
+          <Route path='/myaccount' element={<ProtectedRoutes><MyAccount/></ProtectedRoutes>} />
+          {/* <Route path='/address' element={<ProtectedRoutes><Address/></ProtectedRoutes>} /> */}
           <Route path='/auth' element={<AuthenticationForm/>} />
           <Route path='/addtocart' element={<ProtectedRoutes><AddToCart/></ProtectedRoutes> } />
           <Route path='/checkout' element={<Checkout/>} />
@@ -74,7 +77,7 @@ function App() {
           <Route path='/signup' element={<SignupForm/>} />
           <Route path='/login' element={<LoginForm/>} />
           <Route path='/forgot-password' element={<ForgotPassword/>} />
-          <Route path='/reset-password' element={<ResetPassword/>} />
+          <Route path='/reset-password/:token' element={<ResetPassword/>} />
 
 
         </Route>

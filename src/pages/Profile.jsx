@@ -1,43 +1,78 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React, { useState } from "react";
+import { useSelector } from "react-redux";
+import { Input, Switch , Button} from "antd";
+import { SiNamecheap } from "react-icons/si";
+import { MdMarkEmailRead } from "react-icons/md";
+import { FaPhone } from "react-icons/fa";
 
 function Profile() {
+  const { user } = useSelector((state) => state.auth);
+  const [profile, setProfile] = useState(
+    user?.imgpath?.url || "../src/assets/profile-fallback.svg"
+  );
+  
+  const [isDisabled, setIsDisabled] = useState(true); // State to control the disabled state
+
+  console.log(user)
+
   return (
-    <div className='px-10 py-5 grid grid-col-span-12 grid-flow-col gap-4  bg-gray-100'>
-      {/* first col */}
-      <div className='rounded-sm grid gap-3 '>
-        {/* first col - first row */}
-        <div className='bg-white flex px-4 py-2 gap-4 items-center'>
-          <div>
-            <img src='../src/assets/profile-fallback.svg' />
-          </div>
-          <div>
-            <p className='text-sm'>Hello,</p>
-            <p className='font-semibold'>Anurag Sonkar</p>
-          </div>
-        </div>
-        {/* first col - second row */}
-        <div className='bg-white px-4 py-2'>
-          
-        </div>
-        {/* first col - third row*/}
-        <div className='bg-white px-4 py-2 capitalize grid gap-2'>
-        <h1 className='font-semibold '>frequency visited:</h1>
-        <div className='flex text-sm text-gray-500 gap-4'>
-          <Link to="" className='text-xs block' >track order</Link>
-          <Link to="" className='text-xs block' >help center</Link>
-        </div>
-        </div>
-
+    <div className="max-w-4xl w-full h-max rounded-md px-4 py-8 sticky top-0  ">
+      {/* Profile Image */}
+      <div className="flex justify-center">
+        <img
+          src={profile}
+          className="h-40 w-40 rounded-full object-cover border-2 p-1 border-blue-500"
+        />
       </div>
 
-      {/* second-col */}
-      <div className='col-span-8 bg-white shadow-xl rounded-sm'>
-        5
-      </div>
+      <div>
+        <div className="flex justify-between pt-12">
+          <div className="text-3xl font-bold capitalize">
+            Personal Information
+          </div>
+          <div>
+            <Switch
+              checked={!isDisabled}
+              checkedChildren="Enable"
+              unCheckedChildren="Disable"
+              onChange={() => {
+                setIsDisabled(!isDisabled);
+              }}
+            />
+          </div>
+        </div>
 
+
+        <form className="grid gap-5 py-5">
+          {/* Name */}
+          <Input
+            size="large"
+            value={user?.name}
+            placeholder="Name"
+            prefix={<SiNamecheap size={24} style={{ marginRight: "14px" }} />}
+            disabled={isDisabled} 
+          />
+          {/* Email Address */}
+          <Input
+            size="large"
+            value={user?.email}
+            placeholder="Email"
+            prefix={<MdMarkEmailRead size={24} style={{ marginRight: "14px" }} />}
+            disabled={isDisabled} 
+          />
+          {/* Mobile Number */}
+          <Input
+            size="large"
+            placeholder="Mobile no."
+            prefix={<FaPhone size={24} style={{ marginRight: "14px" }} />}
+            disabled={isDisabled}
+          />
+
+           {!isDisabled && <Button type="primary" className="w-fit mt-5">Save</Button>}
+        </form>
+      </div>
     </div>
-  )
+  );
 }
 
-export default Profile
+export default Profile;
