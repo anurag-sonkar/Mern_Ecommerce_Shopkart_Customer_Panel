@@ -1,14 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { BreadCrumb } from "../components/BreadCrumb";
 import HelmetTitle from "../components/HelmetTitle";
-import { Input } from "@material-tailwind/react";
+import { Input, Button, Chip } from "@material-tailwind/react";
 import CardRandom from "../components/CardRandom";
 import { FaFilter } from "react-icons/fa";
 import { DrawerFilter } from "../components/DrawerFilter";
 import PopularProductsCard from "../components/PopularProductsCard";
 import { PaginationCompo } from "../components/PaginationCompo";
 import { useDispatch, useSelector } from "react-redux";
-import { getAllProducts } from "../features/products/productSlice";
+import {
+  getAllFilterProducts,
+  getAllProducts,
+} from "../features/products/productSlice";
+import { Rating } from "@material-tailwind/react";
+import { GoDash } from "react-icons/go";
+import { RxCross2 } from "react-icons/rx";
 
 // const products = [
 //   {
@@ -66,14 +72,91 @@ import { getAllProducts } from "../features/products/productSlice";
 function Store() {
   const [openRight, setOpenRight] = React.useState(false);
   const openDrawerRight = () => setOpenRight(true);
+  const [categories, setCategories] = useState(null);
+  const [brands, setBrands] = useState(null);
+  const [tags, setTags] = useState(null);
+  const [colors, setColors] = useState(null);
+
   const dispatch = useDispatch();
 
-  const { products, isLoading, isError, isSuccess, message } = useSelector(
-    (state) => state.products
-  );
+  const { filteredProducts, products, isLoading, isError, isSuccess, message } =
+    useSelector((state) => state.products);
+  console.log(products);
+  // filter states
+  const [category, setCategory] = useState(null);
+  const [brand, setBrand] = useState(null);
+  const [color, setColor] = useState(null);
+  const [minPrice, setMinPrice] = useState(null);
+  const [maxPrice, setMaxPrice] = useState(null);
+  const [tag, setTag] = useState(null);
+  const [star, setStar] = useState(null);
+
+  console.log(category, brand, color, tag, star);
+
   useEffect(() => {
-    dispatch(getAllProducts())
+    let category = new Set();
+    let brand = new Set();
+    let tag = new Set();
+    let color = [];
+    products?.forEach((product) => {
+      category.add(product.category);
+      brand.add(product.brand);
+
+      product.tags.forEach((ele) => {
+        tag.add(ele);
+      });
+
+      product?.color.forEach((ele) => {
+        const targetColor = ele.color;
+        const targetId = ele._id;
+
+        const foundColor = color.find(
+          (item) => item.color === targetColor && item.id === targetId
+        );
+
+        if (!foundColor) {
+          color.push({ color: ele.color, id: ele._id });
+        }
+      });
+    });
+
+    setCategories([...category]);
+    setBrands([...brand]);
+    setTags([...tag]);
+    setColors([...color]);
+  }, [products]);
+
+  // console.log(categories, brands, tags, colors);
+  //   console.log(products);
+
+  const handleResetAllFilters = () => {
+    setCategory(null);
+    setBrand(null);
+    setColor(null);
+    setMinPrice("");
+    setMaxPrice("");
+    setTag(null);
+    setStar(null);
+  };
+
+  useEffect(() => {
+    dispatch(getAllProducts());
   }, []);
+
+  useEffect(() => {
+    dispatch(
+      getAllFilterProducts({
+        category,
+        brand,
+        color,
+        minPrice,
+        maxPrice,
+        tag,
+        star,
+      })
+    );
+  }, [category, brand, color, minPrice, maxPrice, tag, star]);
+
   return (
     <div className="w-full bg-gray-200">
       <HelmetTitle title="Store" />
@@ -93,15 +176,207 @@ function Store() {
       <div className="grid grid-cols-12 capitalize lg:px-10 px-5 py-5 gap-4">
         {/* filter - for only lg screen  , md&sm-screen filter is in DrawerFilter*/}
         <div className="col-span-3 lg:block hidden">
+          <div className="filter-card">
+            {/* title + reset all */}
+            <div className="flex justify-between items-center">
+              <h1 className="filter-title">filters</h1>
+              <div>
+                <Button
+                  variant="filled"
+                  className="px-3 py-0"
+                  onClick={handleResetAllFilters}
+                >
+                  reset all
+                </Button>
+              </div>
+            </div>
+            <div className="flex gap-2 flex-wrap">
+              {category && (
+                <div className="flex items-center justify-between gap-2 bg-black text-white rounded-[4px] py-[0.2rem] px-[0.5rem] text-[0.8rem] ">
+                  <span className="">{category}</span>
+                  <span
+                    onClick={() => {
+                      setCategory(null);
+                    }}
+                    className="cursor-pointer hover:text-red-400 hover:scale-125"
+                  >
+                    <RxCross2 />
+                  </span>
+                </div>
+              )}
+              {/* brand*/}
+              {brand && (
+                <div className="flex items-center justify-between gap-2 bg-black text-white rounded-[4px] py-[0.2rem] px-[0.5rem] text-[0.8rem] ">
+                  <span className="">{brand}</span>
+                  <span
+                    onClick={() => {
+                      setBrand(null);
+                    }}
+                    className="cursor-pointer hover:text-red-400 hover:scale-125"
+                  >
+                    <RxCross2 />
+                  </span>
+                </div>
+              )}
+
+              {/* max - min price */}
+              <div className="flex items-center">
+                {minPrice && (
+                  <div className="flex items-center justify-between gap-2 bg-black text-white rounded-[4px] py-[0.1rem] px-[0.5rem] text-[0.8rem] ">
+                    <span className="">{minPrice}</span>
+                    <span
+                      onClick={() => {
+                        setMinPrice(null);
+                      }}
+                      className="cursor-pointer hover:text-red-400 hover:scale-125"
+                    >
+                      <RxCross2 />
+                    </span>
+                  </div>
+                )}
+                {minPrice && maxPrice && <GoDash />}
+                {maxPrice && (
+                  <div className="flex items-center justify-between gap-2 bg-black text-white rounded-[4px] py-[0.1rem] px-[0.5rem] text-[0.8rem] ">
+                    <span className="">{maxPrice}</span>
+                    <span
+                      onClick={() => {
+                        setMaxPrice(null);
+                      }}
+                      className="cursor-pointer hover:text-red-400 hover:scale-125"
+                    >
+                      <RxCross2 />
+                    </span>
+                  </div>
+                )}
+              </div>
+
+                {/* color */}
+              {color && (
+                <div className="flex items-center justify-between gap-2 bg-black text-white rounded-[4px] py-[0.2rem] px-[0.5rem] text-[0.8rem] ">
+                <div
+                    className="w-5 h-5 rounded-full border-2"
+                    style={{
+                      backgroundColor: colors?.filter(
+                        (ele) => ele.id === color
+                      )[0]?.color,
+                    }}
+                  ></div>
+                  <span
+                    onClick={() => {
+                      setColor(null);
+                    }}
+                    className="cursor-pointer hover:text-red-400 hover:scale-125"
+                  >
+                    <RxCross2 />
+                  </span>
+                </div>
+              )}
+
+              {/* rating */}
+              {star && (
+                <div className="flex items-center justify-between gap-2 bg-black text-white rounded-[4px] py-[0.2rem] px-[0.5rem] text-[0.8rem] ">
+                  <span className="">{Array.from({ length: star }, (_, index) => (
+                      <span key={index}>⭐</span>
+                    ))}</span>
+                  <span
+                    onClick={() => {
+                      setStar(null);
+                    }}
+                    className="cursor-pointer hover:text-red-400 hover:scale-125"
+                  >
+                    <RxCross2 />
+                  </span>
+                </div>
+              )}
+
+              {/* tags */}
+              {tag && (
+                <div className="flex items-center justify-between gap-2 bg-black text-white rounded-[4px] py-[0.2rem] px-[0.5rem] text-[0.8rem] ">
+                  <span className="">{tag}</span>
+                  <span
+                    onClick={() => {
+                      setTag(null)
+                    }}
+                    className="cursor-pointer hover:text-red-400 hover:scale-125"
+                  >
+                    <RxCross2 />
+                  </span>
+                </div>
+              )}
+              
+
+            </div>
+          </div>
           {/* filter-card :shop by categories*/}
           <div className="filter-card">
-            <h1 className="filter-title">shop by categories</h1>
+            <div className="flex justify-between items-center">
+              <h1 className="filter-title">shop by categories</h1>
+              <div>
+                <Button
+                  variant="outlined"
+                  className="px-3 py-0"
+                  onClick={() => setCategory(null)}
+                >
+                  reset
+                </Button>
+              </div>
+            </div>
             <div>
               <ul>
-                <li>watch</li>
+                {categories?.map((ele, index) => (
+                  <li
+                    onClick={() => setCategory(ele)}
+                    style={{
+                      color: category === ele ? "#000000" : "#000000", // Example color
+                      backgroundColor: category === ele ? "#E91E63" : "#FFFFFF", // Example background color
+                      padding: "2px 12px",
+                      cursor: "pointer",
+                      borderRadius: "20px",
+                      transition: "all ease-in-out 0.2s",
+                    }}
+                  >
+                    {ele}
+                  </li>
+                ))}
+
+                {/* <li>watch</li>
                 <li>tv</li>
                 <li>camera</li>
-                <li>laptop</li>
+                <li>laptop</li> */}
+              </ul>
+            </div>
+          </div>
+          {/* filter by brands */}
+          <div className="filter-card">
+            <div className="flex justify-between items-center">
+              <h1 className="filter-title">shop by brands</h1>
+              <div>
+                <Button
+                  variant="outlined"
+                  className="px-3 py-0"
+                  onClick={() => setBrand(null)}
+                >
+                  reset
+                </Button>
+              </div>
+            </div>
+            <div>
+              <ul>
+                {brands?.map((ele) => (
+                  <li
+                    onClick={() => setBrand(ele)}
+                    style={{
+                      color: brand === ele ? "#000000" : "#000000",
+                      backgroundColor: brand === ele ? "#009688" : "#FFFFFF",
+                      padding: "2px 12px",
+                      cursor: "pointer",
+                      borderRadius: "20px",
+                      transition: "all ease-in-out 0.2s",
+                    }}
+                  >
+                    {ele}
+                  </li>
+                ))}
               </ul>
             </div>
           </div>
@@ -141,6 +416,8 @@ function Store() {
                       className: "hidden",
                     }}
                     containerProps={{ className: "min-w-[50px]" }}
+                    value={minPrice}
+                    onChange={(e) => setMinPrice(e.target.value)}
                   />
                 </div>
                 <div className="w-28">
@@ -151,6 +428,7 @@ function Store() {
                       className: "hidden",
                     }}
                     containerProps={{ className: "min-w-[50px]" }}
+                    onChange={(e) => setMaxPrice(e.target.value)}
                   />
                 </div>
               </div>
@@ -158,36 +436,37 @@ function Store() {
 
             {/*colors */}
             <div className="mb-6">
-              <h1 className="sub-title">colors</h1>
+              <div className="flex justify-between items-center">
+                <h1 className="filter-title">colors</h1>
+                <div>
+                  <Button
+                    variant="outlined"
+                    className="px-3 py-0"
+                    onClick={() => setColor(null)}
+                  >
+                    reset
+                  </Button>
+                </div>
+              </div>
               <ul className="colors grid grid-cols-8 gap-1">
-                <li className="bg-gray-900"></li>
-                <li className="bg-teal-700"></li>
-                <li className="bg-pink-900"></li>
-                <li className="bg-red-500"></li>
-                <li className="bg-yellow-400"></li>
-                <li className="bg-red-200"></li>
-                <li className="bg-blue-600"></li>
-                <li className="bg-teal-900"></li>
-                <li className="bg-blue-600"></li>
-                <li className="bg-red-500"></li>
-                <li className="bg-gray-900"></li>
-                <li className="bg-teal-700"></li>
-                <li className="bg-pink-900"></li>
-                <li className="bg-red-500"></li>
-                <li className="bg-red-200"></li>
-                <li className="bg-gray-900"></li>
-                <li className="bg-red-500"></li>
-                <li className="bg-yellow-400"></li>
-                <li className="bg-red-200"></li>
-                <li className="bg-pink-900"></li>
-                <li className="bg-red-500"></li>
-                <li className="bg-red-200"></li>
-                <li className="bg-teal-200"></li>
+                {colors?.map((ele) => (
+                  <li
+                    onClick={() => setColor(ele.id)}
+                    className=""
+                    style={{
+                      backgroundColor: `${ele.color}`,
+                      outline: color === ele.id ? "2px solid skyblue" : "",
+                      border: color === ele.id ? "2px solid #fff" : "",
+                      padding: "2px",
+                      // transition: "all ease-in-out 0.1s",
+                    }}
+                  ></li>
+                ))}
               </ul>
             </div>
 
             {/* size */}
-            <div className="mb-6">
+            {/* <div className="mb-6">
               <h1 className="sub-title">size</h1>
               <div>
                 <input type="checkbox" id="small" className="custom-checkbox" />
@@ -213,21 +492,53 @@ function Store() {
                 <input type="checkbox" id="xxl" className="custom-checkbox" />
                 <label htmlFor="xxl">XXL</label>
               </div>
+            </div> */}
+
+            {/* filter by ratings */}
+            <div className="mb-6">
+              <div className="flex justify-between items-center">
+                <h1 className="filter-title">filter by ratings</h1>
+                <div>
+                  <Button
+                    variant="outlined"
+                    className="px-3 py-0"
+                    onClick={() => setStar(null)}
+                  >
+                    reset
+                  </Button>
+                </div>
+              </div>
+              <Rating value={star} onChange={(value) => setStar(value)} />
             </div>
           </div>
 
           {/* filter-card:product tags */}
           <div className="filter-card">
-            <h1 className="filter-title">product tags</h1>
+            <div className="flex justify-between items-center">
+              <h1 className="filter-title">product tags</h1>
+              <div>
+                <Button
+                  variant="outlined"
+                  className="px-3 py-0"
+                  onClick={() => setTag(null)}
+                >
+                  reset
+                </Button>
+              </div>
+            </div>
             <div className="tags-container">
-              <span className="tags">Headphone</span>
-              <span className="tags">tablet</span>
-              <span className="tags">speaker</span>
-              <span className="tags">speaker</span>
-              <span className="tags">Mouse</span>
-              <span className="tags">desktop</span>
-              <span className="tags">Mouse</span>
-              <span className="tags">desktop</span>
+              {tags?.map((ele) => (
+                <span
+                  className="tags"
+                  onClick={() => setTag(ele)}
+                  style={{
+                    backgroundColor: ele === tag ? "black" : "",
+                    color: ele === tag ? "#fff" : "#000",
+                  }}
+                >
+                  {ele}
+                </span>
+              ))}
             </div>
           </div>
 
@@ -256,7 +567,51 @@ function Store() {
                 <option value="title-asc">A - Z</option>
                 <option value="title-desc">Z - A</option>
               </select>
+              <div className="flex gap-2 items-center">
+                {category && <Chip color="pink" value={category} />}
+                {brand && <Chip color="teal" value={brand} />}
+                {minPrice && (
+                  <Chip
+                    color="teal"
+                    value={minPrice}
+                    variant="outlined"
+                    className="px-2 py-0 text-sm"
+                  />
+                )}
+                {minPrice && maxPrice && <GoDash />}
+                {maxPrice && (
+                  <Chip
+                    color="teal"
+                    value={maxPrice}
+                    variant="outlined"
+                    className="px-2 py-0 text-sm"
+                  />
+                )}
+                {color && (
+                  <div
+                    className="w-7 h-7 rounded-full border-2"
+                    style={{
+                      backgroundColor: colors?.filter(
+                        (ele) => ele.id === color
+                      )[0]?.color,
+                    }}
+                  ></div>
+                )}
+                {tag && (
+                  <div className="bg-black text-white rounded-[4px] py-[0.2rem] px-[0.5rem] text-[0.8rem] ">
+                    {tag}
+                  </div>
+                )}
+                {
+                  <div>
+                    {Array.from({ length: star }, (_, index) => (
+                      <span key={index}>⭐</span>
+                    ))}
+                  </div>
+                }
+              </div>
             </div>
+
             {/* grid view */}
             <div className="lg:flex md:flex gap-3 hidden">
               <div className="text-gray-500 text-sm">21 Products</div>
@@ -290,11 +645,13 @@ function Store() {
           </div>
           {/* second-row :  products -  */}
           <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4 bg-white px-4 py-4 rounded-sm">
-            {products && products.length > 0 && products.map((product) => (
-              <div key={product.id} className="group relative">
-                <PopularProductsCard product={product} />{" "}
-              </div>
-            ))}
+            {filteredProducts &&
+              filteredProducts.length > 0 &&
+              filteredProducts.map((product) => (
+                <div key={product.id} className="group relative">
+                  <PopularProductsCard product={product} />{" "}
+                </div>
+              ))}
           </div>
           {/* third row - pagination */}
           <div className="grid place-items-end mt-2 py-3 px-2 rounded-md bg-white w-full">

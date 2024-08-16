@@ -423,7 +423,7 @@ function Home() {
         </h2>
 
         <div className="grid lg:grid-cols-4 md:grid-cols-3 grid-cols-1 gap-2">
-          {products.map((product) => {
+          {products?.map((product) => {
             if(product.tags.includes("popular") ){
               return <div key={product?.id} className="group relative">
               <PopularProductsCard product={product} />{" "}

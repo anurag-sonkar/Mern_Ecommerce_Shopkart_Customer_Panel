@@ -95,10 +95,6 @@
   cursor: pointer;
 }
 
-.tags:hover{
-  background-color: black;
-  color: #fff;
-}
 
 /* single product page*/
 .tiles{

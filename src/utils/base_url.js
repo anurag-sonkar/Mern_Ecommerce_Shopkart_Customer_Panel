@@ -1,5 +1,5 @@
 export const auth_base_url = "http://localhost:8000"
-export const products_base_url = "http://localhost:8000/product"
+export const products_base_url = "http://localhost:8000/product/"
 export const enquiry_base_url = "http://localhost:8000/enquiry"
 export const cart_base_url = "http://localhost:8000/cart"
 export const address_base_url = "http://localhost:8000/address"

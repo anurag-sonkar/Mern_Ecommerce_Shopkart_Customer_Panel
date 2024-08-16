@@ -8,6 +8,7 @@ import Profile from "./Profile";
 import { useDispatch, useSelector } from "react-redux";
 import { signOut } from "../features/auth/authSlice";
 import { toast, Bounce } from "react-toastify";
+import ForgotPassword from "./Authentication/ForgotPassword";
 
 function MyAccount() {
   // const {pathname} = useLocation()
@@ -114,6 +115,17 @@ function MyAccount() {
               >
                 manage addresses
               </Link>
+              <Link
+                onClick={() => setComponent("/change-password")}
+                className="block px-12 py-2 hover:bg-[#F5FAFF] hover:text-[#2874F0]"
+                style={{
+                  backgroundColor: `${
+                    component === "/change-password" ? "#F5FAFF" : ""
+                  }`,
+                }}
+              >
+                change password
+              </Link>
             </div>
           </div>
 
@@ -180,6 +192,13 @@ function MyAccount() {
       {component === "/address" && (
         <div className="col-span-8 bg-white shadow-xl rounded-sm px-6">
           <Address />
+        </div>
+      )}
+
+      {/* second col - if chnage password*/}
+      {component === "/change-password" && (
+        <div className="col-span-8 bg-white shadow-xl rounded-sm px-6">
+          <ForgotPassword />
         </div>
       )}
 

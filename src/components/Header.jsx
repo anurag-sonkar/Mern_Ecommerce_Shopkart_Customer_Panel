@@ -15,13 +15,18 @@ import { TbCategory } from "react-icons/tb";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { UserOutlined } from "@ant-design/icons";
-import { Button, Flex } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { toast, Bounce } from "react-toastify";
 import { signOut } from "../features/auth/authSlice";
 import { getCart } from "../features/cart/cartSlice";
+import { AudioOutlined } from "@ant-design/icons";
+import { Button, Flex, Input, Space,AutoComplete } from "antd";
+import { Typeahead } from "react-bootstrap-typeahead";
+import "react-bootstrap-typeahead/css/Typeahead.css";
+import { FaSearch } from "react-icons/fa";
+import { IoClose } from "react-icons/io5";
 
 const navigation = [
   { name: "Home", href: "/", current: true },
@@ -94,7 +99,6 @@ function Header() {
     );
 
     signOutPromise.then(() => {
-      
       navigate("/");
     });
   };
@@ -112,6 +116,44 @@ function Header() {
       navigate("/login");
     }
   };
+
+  // searching fun
+  const { products } = useSelector((state) => state.products);
+  // console.log(products);
+  
+  const [inputValue, setInputValue] = useState('');
+  const handleSearch = (value) => {
+    console.log(value);
+    if (value) {
+      const product = products.find(product => product.title === value);
+      if (product) {
+        navigate(`/product/${product._id}`);
+      }
+    }
+  };
+
+  const handleChange = (value) => {
+    setInputValue(value);
+  };
+
+  const filteredOptions = products
+    .filter(product =>
+      product.title.toLowerCase().includes(inputValue.toLowerCase()) ||
+      product.brand.toLowerCase().includes(inputValue.toLowerCase()) ||
+      product.category.toLowerCase().includes(inputValue.toLowerCase())
+    )
+    .map(product => ({
+      value: product.title,
+      label: (
+        <div className="flex items-center justify-between p-2 hover:bg-gray-200 bg-white">
+          <span>{product.title}</span>
+          <span className="text-gray-500 text-sm">
+            {product.brand} | {product.category}
+          </span>
+        </div>
+      ),
+    }));
+
 
   return (
     <nav className="w-full">
@@ -181,10 +223,10 @@ function Header() {
 
             {user ? (
               <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-              <div className="flex gap-2 mx-5 text-gray-500 capitalize items-center font-semibold">
-                <span className="text-2xl">welcome!</span>
-                <span className="text-xl">{user?.name?.split(" ")[0]}</span>
-              </div>
+                <div className="flex gap-2 mx-5 text-gray-500 capitalize items-center font-semibold">
+                  <span className="text-2xl">welcome!</span>
+                  <span className="text-xl">{user?.name?.split(" ")[0]}</span>
+                </div>
                 {/* <FaOpencart /> */}
                 <Link
                   to="/addtocart"
@@ -293,6 +335,7 @@ function Header() {
       </Disclosure>
 
       <div className="lg:px-10 px-5 py-2 bg-gray-800 lg:flex md:flex justify-between">
+        {/* select -option */}
         <div className="flex items-center">
           <div>
             <TbCategory size={30} color="white" />
@@ -307,12 +350,24 @@ function Header() {
           </select>
         </div>
 
-        <div>
-          <input
-            className="lg:w-96 md:w-96 w-[100%] py-1 lg:px-4 px-2 rounded-full lg:my-1 my-2 lg:text-base text-sm"
-            placeholder="Search For Category, Products and Many More...."
-          />
-        </div>
+        {/* search input */}
+        {/* <Search placeholder="input search text" onSearch={onSearch} enterButton /> */}
+        <div className="relative w-full max-w-lg z-2">
+      <AutoComplete
+        options={filteredOptions}
+        onSelect={handleSearch}
+        onChange={handleChange}
+        filterOption={false}  // Disable default filtering
+        className="w-full"
+      >
+        <Input
+          placeholder="Search for products, brands, and categories..."
+          prefix={<FaSearch className="text-gray-500 mx-2" />}
+          suffix={<IoClose className="text-gray-500 cursor-pointer" onClick={() => setInputValue('')} />}
+          className="border border-gray-300 rounded-full shadow-sm focus:border-blue-500"
+        />
+      </AutoComplete>
+    </div>
       </div>
     </nav>
   );
