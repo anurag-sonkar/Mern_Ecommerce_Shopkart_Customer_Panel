@@ -22,7 +22,7 @@ import { toast, Bounce } from "react-toastify";
 import { signOut } from "../features/auth/authSlice";
 import { getCart } from "../features/cart/cartSlice";
 import { AudioOutlined } from "@ant-design/icons";
-import { Button, Flex, Input, Space,AutoComplete } from "antd";
+import { Button, Flex, Input, Space, AutoComplete } from "antd";
 import { Typeahead } from "react-bootstrap-typeahead";
 import "react-bootstrap-typeahead/css/Typeahead.css";
 import { FaSearch } from "react-icons/fa";
@@ -120,12 +120,12 @@ function Header() {
   // searching fun
   const { products } = useSelector((state) => state.products);
   // console.log(products);
-  
-  const [inputValue, setInputValue] = useState('');
+
+  const [inputValue, setInputValue] = useState("");
   const handleSearch = (value) => {
     console.log(value);
     if (value) {
-      const product = products.find(product => product.title === value);
+      const product = products.find((product) => product.title === value);
       if (product) {
         navigate(`/product/${product._id}`);
       }
@@ -137,12 +137,13 @@ function Header() {
   };
 
   const filteredOptions = products
-    .filter(product =>
-      product.title.toLowerCase().includes(inputValue.toLowerCase()) ||
-      product.brand.toLowerCase().includes(inputValue.toLowerCase()) ||
-      product.category.toLowerCase().includes(inputValue.toLowerCase())
+    .filter(
+      (product) =>
+        product.title.toLowerCase().includes(inputValue.toLowerCase()) ||
+        product.brand.toLowerCase().includes(inputValue.toLowerCase()) ||
+        product.category.toLowerCase().includes(inputValue.toLowerCase())
     )
-    .map(product => ({
+    .map((product) => ({
       value: product.title,
       label: (
         <div className="flex items-center justify-between p-2 hover:bg-gray-200 bg-white">
@@ -153,7 +154,6 @@ function Header() {
         </div>
       ),
     }));
-
 
   return (
     <nav className="w-full">
@@ -353,21 +353,26 @@ function Header() {
         {/* search input */}
         {/* <Search placeholder="input search text" onSearch={onSearch} enterButton /> */}
         <div className="relative w-full max-w-lg z-2">
-      <AutoComplete
-        options={filteredOptions}
-        onSelect={handleSearch}
-        onChange={handleChange}
-        filterOption={false}  // Disable default filtering
-        className="w-full"
-      >
-        <Input
-          placeholder="Search for products, brands, and categories..."
-          prefix={<FaSearch className="text-gray-500 mx-2" />}
-          suffix={<IoClose className="text-gray-500 cursor-pointer" onClick={() => setInputValue('')} />}
-          className="border border-gray-300 rounded-full shadow-sm focus:border-blue-500"
-        />
-      </AutoComplete>
-    </div>
+          <AutoComplete
+            options={filteredOptions}
+            onSelect={handleSearch}
+            onChange={handleChange}
+            filterOption={false} // Disable default filtering
+            className="w-full"
+          >
+            <Input
+              placeholder="Search for products, brands, and categories..."
+              prefix={<FaSearch className="text-gray-500 mx-2" />}
+              suffix={
+                <IoClose
+                  className="text-gray-500 cursor-pointer"
+                  onClick={() => setInputValue("")}
+                />
+              }
+              className="border border-gray-300 rounded-full shadow-sm focus:border-blue-500"
+            />
+          </AutoComplete>
+        </div>
       </div>
     </nav>
   );

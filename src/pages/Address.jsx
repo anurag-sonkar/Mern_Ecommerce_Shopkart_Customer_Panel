@@ -8,7 +8,7 @@ import {
 } from "../features/address/addressSlice";
 import { FaDeleteLeft } from "react-icons/fa6";
 import axios from "axios";
-import { config } from "../utils/config";
+// import { config } from "../utils/config";
 
 function Address() {
     const dispatch = useDispatch();

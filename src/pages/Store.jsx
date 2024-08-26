@@ -82,6 +82,7 @@ function Store() {
   const { filteredProducts, products, isLoading, isError, isSuccess, message } =
     useSelector((state) => state.products);
   console.log(products);
+
   // filter states
   const [category, setCategory] = useState(null);
   const [brand, setBrand] = useState(null);
@@ -91,7 +92,23 @@ function Store() {
   const [tag, setTag] = useState(null);
   const [star, setStar] = useState(null);
 
-  console.log(category, brand, color, tag, star);
+  // sort states
+  const [sortBy , setSortBy] = useState(null)
+  const [sortOrder , setSortOrder] = useState(null)
+
+
+  // pagination states
+  const [limit , setLimit] = useState(2)
+  const [page , setPage] = useState(1)
+  const [totalPage , setTotalPage] = useState(Math.ceil(products?.length/limit) || '')
+  // console.log(totalPage)
+  // console.log(category, brand, color, tag, star);
+
+  /* handle sort */
+  function handleSort(e){
+    setSortBy(e.target.value.split(",")[0])
+    setSortOrder(e.target.value.split(",")[1])
+  }
 
   useEffect(() => {
     let category = new Set();
@@ -139,9 +156,16 @@ function Store() {
     setStar(null);
   };
 
+
+
   useEffect(() => {
     dispatch(getAllProducts());
   }, []);
+
+  useEffect(()=>{
+    setTotalPage(Math.ceil(products?.length/limit))
+
+  },[products])
 
   useEffect(() => {
     dispatch(
@@ -153,9 +177,12 @@ function Store() {
         maxPrice,
         tag,
         star,
+        sortBy, sortOrder,
+        limit,
+        page
       })
     );
-  }, [category, brand, color, minPrice, maxPrice, tag, star]);
+  }, [category, brand, color, minPrice, maxPrice, tag, star,sortBy,sortOrder,limit,page]);
 
   return (
     <div className="w-full bg-gray-200">
@@ -556,17 +583,17 @@ function Store() {
             {/* sort by */}
             <div className="flex gap-3 items-center lg:justify-normal md:justify-normal justify-between w-full max-w-72">
               <label>sort</label>
-              <select className="bg-gray-100 px-2 py-2 capitalize outline-none border-none rounded-md text-sm text-gray-600">
-                <option value="popular">most popular</option>
-                <option value="best-rating">best rating</option>
-                <option value="newest">newest</option>
-                <option value="price-asc">low to high</option>
-                <option value="price-desc">high to low</option>
-                <option value="time-asc">old to new</option>
-                <option value="time-desc">new to old</option>
-                <option value="title-asc">A - Z</option>
-                <option value="title-desc">Z - A</option>
+              <select className="bg-gray-100 px-2 py-2 capitalize outline-none border-none rounded-md text-sm text-gray-600" onChange={(e)=>handleSort(e)}>
+                <option value="title,asc">A - Z</option>
+                <option value="title,desc">Z - A</option>
+                <option value="price,asc">low to high</option>
+                <option value="price,desc">high to low</option>
+                <option value="createdAt,asc">old to new</option>
+                <option value="createdAt,desc">new to old</option>
+                <option value="totalrating,asc">low to high rating</option>
+                <option value="totalrating,desc">high to low ratings</option>
               </select>
+              
               <div className="flex gap-2 items-center">
                 {category && <Chip color="pink" value={category} />}
                 {brand && <Chip color="teal" value={brand} />}
@@ -614,7 +641,7 @@ function Store() {
 
             {/* grid view */}
             <div className="lg:flex md:flex gap-3 hidden">
-              <div className="text-gray-500 text-sm">21 Products</div>
+              <div className="text-gray-500 text-sm">{products?.length} Products</div>
               {/* <div className="flex gap-1 items-center">
                 <div className="bg-blue-gray-100 p-1 rounded-sm cursor-pointer hover:bg-blue-gray-700 transition-colors ease-in-out duration-150">
                   <img
@@ -644,7 +671,7 @@ function Store() {
             </div>
           </div>
           {/* second-row :  products -  */}
-          <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4 bg-white px-4 py-4 rounded-sm">
+          <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4 bg-white px-4 py-4 rounded-sm min-h-[160vh]">
             {filteredProducts &&
               filteredProducts.length > 0 &&
               filteredProducts.map((product) => (
@@ -655,7 +682,7 @@ function Store() {
           </div>
           {/* third row - pagination */}
           <div className="grid place-items-end mt-2 py-3 px-2 rounded-md bg-white w-full">
-            <PaginationCompo />
+            <PaginationCompo page={page} setPage={setPage} totalPage={totalPage}/>
           </div>
         </div>
       </div>

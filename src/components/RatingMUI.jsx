@@ -2,8 +2,8 @@ import * as React from "react";
 import Box from "@mui/material/Box";
 import Rating from "@mui/material/Rating";
 
-function RatingMUI() {
-  const [value, setValue] = React.useState(2);
+function RatingMUI({rating}) {
+  const [value, setValue] = React.useState(rating);
   return (
     <Box
       sx={{

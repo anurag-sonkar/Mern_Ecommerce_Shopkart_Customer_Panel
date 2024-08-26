@@ -134,7 +134,7 @@ function PopularProductsCard({ product }) {
           src={product.images[0].url}
           alt={product.imageAlt}
           // className="h-full w-full object-cover group-hover:scale-110 transition-all duration-400"
-          className="h-full w-full object-cover "
+          className="h-full w-full object-contain "
         />
         {/* add to wishlist + discount show */}
         <div className="absolute top-0 left-0 flex justify-between items-center w-full p-1">
@@ -189,9 +189,9 @@ function PopularProductsCard({ product }) {
         <Typography
           variant="small"
           color="gray"
-          className="font-normal opacity-75 text-xs flex justify-between"
+          className="font-normal opacity-75 text-xs flex justify-between items-center"
         >
-          <div className=""><RatingMUI /></div>
+          {product && product.totalrating && <div className=""><RatingMUI rating = {product?.totalrating}/></div>}
           <div onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();

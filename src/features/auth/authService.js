@@ -1,6 +1,6 @@
 import axios from "axios";
 import { auth_base_url } from "../../utils/base_url";
-import { config } from "../../utils/config";
+import { getConfig } from "../../utils/config";
 
 const login = async (userData) => {
     // console.log(userData)
@@ -14,7 +14,7 @@ const login = async (userData) => {
 }
 
 const signOut = async ()=>{
-    const response = await axios.put(`${auth_base_url}/logout`,{}, config)
+    const response = await axios.put(`${auth_base_url}/logout`,{}, getConfig())
     if(response.data){
         if(localStorage.getItem('user')) {
             // localStorage.removeItem('user')
@@ -40,7 +40,7 @@ const register = async (data)=>{
 }
 
 const getWishlist = async ()=>{
-    const response = await axios.get(`${auth_base_url}/wishlist` , config)
+    const response = await axios.get(`${auth_base_url}/wishlist` , getConfig())
     console.log(response)
     return response.data
 }

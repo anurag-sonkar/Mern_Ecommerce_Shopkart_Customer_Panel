@@ -8,7 +8,8 @@ import {
 } from "../features/address/addressSlice";
 import { FaDeleteLeft } from "react-icons/fa6";
 import axios from "axios";
-import { config } from "../utils/config";
+import { getConfig } from "../utils/config";
+// import { config } from "../utils/config";
 
 function Checkout() {
   const dispatch = useDispatch();
@@ -103,7 +104,7 @@ function Checkout() {
     try {
       const { data: { order } } = await axios.post("http://localhost:8000/checkout", {
         amount
-      } , config);
+      } , getConfig());
   
       const options = {
         key: 'rzp_test_NjNjGfVWdK6cuq',

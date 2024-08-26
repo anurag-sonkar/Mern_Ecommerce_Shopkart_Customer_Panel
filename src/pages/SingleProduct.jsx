@@ -9,7 +9,11 @@ import { CiHeart } from "react-icons/ci";
 import { GoGitCompare } from "react-icons/go";
 import ImageMagnifier from "../components/ImageMagnifier";
 import { useDispatch, useSelector } from "react-redux";
-import { addProductReview, getAllProducts, getProduct } from "../features/products/productSlice";
+import {
+  addProductReview,
+  getAllProducts,
+  getProduct,
+} from "../features/products/productSlice";
 import { addToCart } from "../features/cart/cartSlice";
 import { toast, Bounce } from "react-toastify";
 import { Rating, Progress } from "@material-tailwind/react";
@@ -17,17 +21,15 @@ import { Flex, Input } from "antd";
 const { TextArea } = Input;
 import PopularProductsCard from "../components/PopularProductsCard";
 
-
 function SingleProduct() {
   const [star, setStar] = useState("");
   const [comment, setComment] = useState("");
-  const [toggleReviewForm , setToggleReviewForm] = useState(false)
+  const [toggleReviewForm, setToggleReviewForm] = useState(false);
   const dispatch = useDispatch();
   const { id } = useParams();
-  const {products,  product, isLoading, isError, isSuccess, message } = useSelector(
-    (state) => state.products
-  );
-  console.log(product)
+  const { products, product, isLoading, isError, isSuccess, message } =
+    useSelector((state) => state.products);
+  console.log(product);
   const [count, setCount] = useState(1);
   const [selectedColor, setSelectedColor] = useState(
     product?.color?.[0]?.color
@@ -64,7 +66,6 @@ function SingleProduct() {
     ).unwrap();
 
     addToCartPromise.then(() => {
-
       toast.info("🦄 Wow! item added to cart!", {
         position: "top-center",
         autoClose: 2000,
@@ -79,13 +80,15 @@ function SingleProduct() {
     });
   };
 
-  const handleSubmitReview = ()=>{
-    if(star === '' || comment === ""){
-      alert('select star out 5 and write your review')
-      return
+  const handleSubmitReview = () => {
+    if (star === "" || comment === "") {
+      alert("select star out 5 and write your review");
+      return;
     }
 
-    const submitPromise =  dispatch(addProductReview({star , comment , prodId : product?._id })).unwrap()
+    const submitPromise = dispatch(
+      addProductReview({ star, comment, prodId: product?._id })
+    ).unwrap();
 
     toast.promise(
       submitPromise,
@@ -107,20 +110,19 @@ function SingleProduct() {
       }
     );
 
-    setStar("")
-    setComment("")
-    setToggleReviewForm(false)
-
-  }
+    setStar("");
+    setComment("");
+    setToggleReviewForm(false);
+  };
 
   const formatDate = (date) => {
-    const newDate = new Date(date)
-    const day = String(newDate.getDate()).padStart(2, '0'); // Get day and pad with '0' if necessary
-    const month = newDate.toLocaleString('en-US', { month: 'long' }); // Get full month name
+    const newDate = new Date(date);
+    const day = String(newDate.getDate()).padStart(2, "0"); // Get day and pad with '0' if necessary
+    const month = newDate.toLocaleString("en-US", { month: "long" }); // Get full month name
     const year = newDate.getFullYear(); // Get full year
 
     return `${day} ${month} ${year}`;
-};
+  };
 
   useEffect(() => {
     dispatch(getProduct(id));
@@ -144,31 +146,26 @@ function SingleProduct() {
   /* 5⭐ ? => 1/2 * 100 = 50% */
   /* 4⭐ ? => 1/2 * 100 = 50%*/
 
-  function ratingPercentage(num){
-    const rating = num
+  function ratingPercentage(num) {
+    const rating = num;
     let count = 0;
 
-    if(product?.ratings?.length === 0){
-      return 0
+    if (product?.ratings?.length === 0) {
+      return 0;
     }
 
-    product?.ratings?.forEach((ele)=>{
-      if(ele?.star === rating)
-        count++
-    })
+    product?.ratings?.forEach((ele) => {
+      if (ele?.star === rating) count++;
+    });
 
-    const totalRatings = product?.ratings?.length
-    const result = (count/totalRatings)*100
-    return (result).toFixed(0)
-
-    
+    const totalRatings = product?.ratings?.length;
+    const result = (count / totalRatings) * 100;
+    return result.toFixed(0);
   }
-  console.log(ratingPercentage(3))
-
 
   return (
     <div className="w-full bg-gray-200">
-      <HelmetTitle title="Product Name" />
+      <HelmetTitle title={product?.title || "Product Name"} />
       <div className="bg-white lg:px-10 px-5 py-1 flex justify-between items-center">
         <BreadCrumb title={product?.title || "product"} />
       </div>
@@ -219,67 +216,16 @@ function SingleProduct() {
             <div className="tiles grid gap-2">
               <p className="font-semibold text-xl">${product?.price}</p>
               <div className="flex gap-2">
-                <RatingMUI />
-                <p className="text-gray-500">(2 reviews)</p>
+                {product && product.totalrating && (
+                  <RatingMUI rating={product?.totalrating} />
+                )}
+                <p className="text-gray-500">
+                  ({product?.ratings?.length}) Reviews
+                </p>
               </div>
             </div>
 
             <div className="tiles flex flex-col gap-1">
-              {/* {product.info &&
-                Object.keys(product.info).map((key) => {
-                  if (key === "color") {
-                    return (
-                      <div
-                        key={key}
-                        className="flex capitalize justify-between max-w-52"
-                      >
-                        <div className="font-semibold">{key} :</div>
-                        <div className="flex space-x-1 items-center">
-                          {product.info[key].map((color) => (
-                            <div
-                              key={color}
-                              className="lg:w-5 lg:h-5 h-3 w-3 rounded-full"
-                              style={{ backgroundColor: color }}
-                            ></div>
-                          ))}
-                        </div>
-                      </div>
-                    );
-                  } else if (key === "Size") {
-                    return (
-                      <div
-                        key={key}
-                        className="flex capitalize justify-between max-w-52"
-                      >
-                        <div className="font-semibold">{key} :</div>
-                        <div className="flex space-x-1 items-center">
-                          {product.info[key].map((size) => (
-                            <button
-                              key={size}
-                              className="bg-gray-200 px-2 hover:bg-black hover:text-white transition-all ease-linear 0.5s rounded"
-                              onClick={() => console.log(size)}
-                            >
-                              {size}
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-                    );
-                  } else {
-                    return (
-                      <div
-                        key={key}
-                        className="flex capitalize justify-between max-w-52"
-                      >
-                        <div className="font-semibold">{key} :</div>
-                        <div className="min-w-16 text-right">
-                          {product.info[key]}
-                        </div>
-                      </div>
-                    );
-                  }
-                })} */}
-
               <div className="flex gap-12 text-lg">
                 <div className="font-semibold  capitalize w-32">category:</div>
                 <div className="capitalize w-full text-left font-semibold text-gray-700">
@@ -318,11 +264,11 @@ function SingleProduct() {
                 </div>
               </div>
               {/* tags */}
-              <div className="flex gap-12 text-lg my-3">
-                <div className="font-semibold  capitalize w-32">tags:</div>
-                <div className="flex flex-wrap gap-4 items-center w-full text-left font-semibold text-gray-700">
+              <div className="flex gap-12 lg:text-lg md:text-lg text-xs my-3">
+                <div className="font-semibold  capitalize w-32 text-lg">tags:</div>
+                <div className="flex flex-wrap gap-2 items-center w-full text-left font-semibold text-gray-700">
                   {product.tags?.map((ele) => (
-                    <span className="bg-[#FF9199] text-white px-4 rounded-full text-center">
+                    <span className="bg-[#FF9199] text-white lg:px-4 md:px-4 px-2 rounded-full text-center">
                       {ele + " "}
                     </span>
                   ))}
@@ -385,9 +331,9 @@ function SingleProduct() {
 
         {/* discription section */}
         {product?.description ? (
-          <section className="lg:mx-10 md:mx-4 sm:mx-2 mt-6">
+          <section className="lg:mx-10 md:mx-4 mx-2 mt-6">
             <h1 className="font-semibold text-2xl my-2">Description</h1>
-            <div className="bg-white rounded-md p-5 text-sm text-justify grid gap-5">
+            <div className="bg-white rounded-md lg:p-5 md:p-5 p-3 text-sm text-justify grid gap-5">
               <p dangerouslySetInnerHTML={{ __html: product.description }} />
               <p>
                 Waiting and watching. It was all she had done for the past
@@ -412,17 +358,20 @@ function SingleProduct() {
           ""
         )}
 
-        <section className="lg:mx-10 md:mx-4 sm:mx-2 mt-6 bg-white px-6 py-12 mb-12 rounded-lg">
+        {/*  */}
+        <section className="lg:mx-10 md:mx-4 mx-2 mt-6 bg-white px-6 py-12 mb-12 rounded-lg ">
           {/* review section pending */}
           <div className="grid grid-cols-6 gap-2">
             {/* left col - rating */}
-            <div className="lg:col-span-3 col-span-6 grid gap-8 max-h-[60vh]">
+            <div className="lg:col-span-3 col-span-6 flex flex-col gap-10">
               <h1 className="text-3xl capitalize font-bold">
                 Ratings & Reviews
               </h1>
               <div className="flex gap-5 items-center font-semibold text-gray-600">
                 <p className="text-lg">{product?.totalrating}.0</p>
-                <Rating value={product.totalrating} readonly />
+                {product && product.totalrating && (
+                  <RatingMUI rating={product?.totalrating} />
+                )}
                 <p>Based on {product?.ratings?.length} Reviews</p>
               </div>
 
@@ -501,84 +450,105 @@ function SingleProduct() {
                   The time is now for it to be okay to be great. People in this
                   world shun people for being great.
                 </p>
-                {
-                  !toggleReviewForm && <Button className="max-w-[90%] mt-10" onClick={()=>setToggleReviewForm(true)}>write a review</Button>
-                }
+                {!toggleReviewForm && (
+                  <Button
+                    className="max-w-[90%] mt-10"
+                    onClick={() => setToggleReviewForm(true)}
+                  >
+                    write a review
+                  </Button>
+                )}
               </div>
 
               {/* review form */}
 
-              {
-                toggleReviewForm && <form className="grid gap-5">
-                <h1 className="text-2xl font-bold capitalize">write a review</h1>
-                <div className="flex items-center gap-2 font-bold text-blue-gray-500">
-                  {star}
-                  <Rating value={star} onChange={(value) => setStar(value)} />
-                </div>
-                <TextArea
-                  showCount
-                  maxLength={500}
-                  onChange={(e) => setComment(e.target.value)}
-                  placeholder="comment your review"
-                  style={{
-                    height: 120,
-                    resize: "none",
-                    maxWidth:"90%"
-                  }}
-                />
+              {toggleReviewForm && (
+                <form className="grid gap-5">
+                  <h1 className="text-2xl font-bold capitalize">
+                    write a review
+                  </h1>
+                  <div className="flex items-center gap-2 font-bold text-blue-gray-500">
+                    {star}
+                    <Rating value={star} onChange={(value) => setStar(value)} />
+                  </div>
+                  <TextArea
+                    showCount
+                    maxLength={500}
+                    onChange={(e) => setComment(e.target.value)}
+                    placeholder="comment your review"
+                    style={{
+                      height: 120,
+                      resize: "none",
+                      maxWidth: "90%",
+                    }}
+                  />
 
-                <Button className="max-w-96 mt-10" onClick={handleSubmitReview}>submit review</Button>
-              </form>
-              }
+                  <Button
+                    className="max-w-96 mt-10"
+                    onClick={handleSubmitReview}
+                  >
+                    submit review
+                  </Button>
+                </form>
+              )}
             </div>
 
             {/* right col - rating */}
             <div className="lg:col-span-3 col-span-6">
-              {
-                product && product?.ratings?.map((ele)=><div
-                className="grid gap-5 py-6"
-                style={{ borderBottom: "1px solid #ccc" }}
-              >
-                <div>
-                  <Rating value={ele.star} readonly />
-                </div>
-                <p>
-                  {ele.comment}
-                </p>
-                <div className="flex items-center gap-4">
-                  <div style={{border:"1px solid orange"}} className="rounded-lg p-[1px]">
-                    <img src={ele?.postedby?.imgpath?.url || "../src/assets/profile-fallback.svg"}  className="w-12 h-12 rounded-lg object-cover"/>
+              {product &&
+                product?.ratings?.map((ele) => (
+                  <div
+                    className="grid gap-5 py-6"
+                    style={{ borderBottom: "1px solid #ccc" }}
+                  >
+                    <div>
+                      <Rating value={ele.star} readonly />
+                    </div>
+                    <p>{ele.comment}</p>
+                    <div className="flex items-center gap-4">
+                      <div
+                        style={{ border: "1px solid orange" }}
+                        className="rounded-lg p-[1px]"
+                      >
+                        <img
+                          src={
+                            ele?.postedby?.imgpath?.url ||
+                            "../src/assets/profile-fallback.svg"
+                          }
+                          className="w-12 h-12 rounded-lg object-cover"
+                        />
+                      </div>
+                      <div className="">
+                        <p className="font-semibold">{ele?.postedby?.name}</p>
+                        <p className="text-gray-600">{formatDate(ele?.date)}</p>
+                      </div>
+                    </div>
                   </div>
-                  <div className="">
-                    <p className="font-semibold">{ele?.postedby?.name}</p>
-                    <p className="text-gray-600">{formatDate(ele?.date)}</p>
-                  </div>
-                </div>
-              </div>)
-              }
-              
+                ))}
             </div>
           </div>
         </section>
 
         {/* popular products */}
         <section className="px-10 py-16 bg-white">
-        <h2 className="text-2xl font-bold tracking-tight text-gray-900 capitalize my-2 mb-5 lg:text-left md:text-left text-center px-4">
-          our popular products
-        </h2>
+          <h2 className="text-2xl font-bold tracking-tight text-gray-900 capitalize my-2 mb-5 lg:text-left md:text-left text-center px-4">
+            our popular products
+          </h2>
 
-        <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-2">
-          {products && products.length > 0 && products.map((product) => {
-            if(product.tags.includes("popular") ){
-              return <div key={product?.id} className="group relative">
-              <PopularProductsCard product={product} />{" "}
-            </div>
-            }
-          }
-            
-          )}
-        </div>
-      </section>
+          <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-2">
+            {products &&
+              products.length > 0 &&
+              products.map((product) => {
+                if (product.tags.includes("popular")) {
+                  return (
+                    <div key={product?.id} className="group relative">
+                      <PopularProductsCard product={product} />{" "}
+                    </div>
+                  );
+                }
+              })}
+          </div>
+        </section>
       </div>
     </div>
   );

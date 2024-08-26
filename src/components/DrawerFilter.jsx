@@ -1,14 +1,132 @@
-import React from "react";
+import React , {useEffect , useState} from "react";
 import {
   Drawer,
   Button,
   Typography,
   IconButton,
 } from "@material-tailwind/react";
-import { Input } from "@material-tailwind/react";
+import { Input,Chip } from "@material-tailwind/react";
+import { useDispatch, useSelector } from "react-redux";
+import { getAllFilterProducts } from "../features/products/productSlice";
+import { Rating } from "@material-tailwind/react";
+import { GoDash } from "react-icons/go";
+import { RxCross2 } from "react-icons/rx";
 
 export function DrawerFilter({ openRight, setOpenRight }) {
   const closeDrawerRight = () => setOpenRight(false);
+
+  const [categories, setCategories] = useState(null);
+  const [brands, setBrands] = useState(null);
+  const [tags, setTags] = useState(null);
+  const [colors, setColors] = useState(null);
+
+  const dispatch = useDispatch();
+
+  const { filteredProducts, products, isLoading, isError, isSuccess, message } =
+  useSelector((state) => state.products);
+console.log(products);
+
+// filter states
+const [category, setCategory] = useState(null);
+const [brand, setBrand] = useState(null);
+const [color, setColor] = useState(null);
+const [minPrice, setMinPrice] = useState(null);
+const [maxPrice, setMaxPrice] = useState(null);
+const [tag, setTag] = useState(null);
+const [star, setStar] = useState(null);
+
+// sort states
+const [sortBy , setSortBy] = useState(null)
+const [sortOrder , setSortOrder] = useState(null)
+
+
+// pagination states
+const [limit , setLimit] = useState(2)
+const [page , setPage] = useState(1)
+const [totalPage , setTotalPage] = useState(Math.ceil(products?.length/limit) || '')
+// console.log(totalPage)
+// console.log(category, brand, color, tag, star);
+
+/* handle sort */
+function handleSort(e){
+  setSortBy(e.target.value.split(",")[0])
+  setSortOrder(e.target.value.split(",")[1])
+}
+
+useEffect(() => {
+  let category = new Set();
+  let brand = new Set();
+  let tag = new Set();
+  let color = [];
+  products?.forEach((product) => {
+    category.add(product.category);
+    brand.add(product.brand);
+
+    product.tags.forEach((ele) => {
+      tag.add(ele);
+    });
+
+    product?.color.forEach((ele) => {
+      const targetColor = ele.color;
+      const targetId = ele._id;
+
+      const foundColor = color.find(
+        (item) => item.color === targetColor && item.id === targetId
+      );
+
+      if (!foundColor) {
+        color.push({ color: ele.color, id: ele._id });
+      }
+    });
+  });
+
+  setCategories([...category]);
+  setBrands([...brand]);
+  setTags([...tag]);
+  setColors([...color]);
+}, [products]);
+
+// console.log(categories, brands, tags, colors);
+//   console.log(products);
+
+const handleResetAllFilters = () => {
+  setCategory(null);
+  setBrand(null);
+  setColor(null);
+  setMinPrice("");
+  setMaxPrice("");
+  setTag(null);
+  setStar(null);
+};
+
+
+
+// useEffect(() => {
+//   dispatch(getAllProducts());
+// }, []);
+
+useEffect(()=>{
+  setTotalPage(Math.ceil(products?.length/limit))
+
+},[products])
+
+useEffect(() => {
+  dispatch(
+    getAllFilterProducts({
+      category,
+      brand,
+      color,
+      minPrice,
+      maxPrice,
+      tag,
+      star,
+      sortBy, sortOrder,
+      limit,
+      page
+    })
+  );
+}, [category, brand, color, minPrice, maxPrice, tag, star,sortBy,sortOrder,limit,page]);
+
 
   return (
     <Drawer
@@ -40,61 +158,379 @@ export function DrawerFilter({ openRight, setOpenRight }) {
       </div>
 
         {/* md&sm -screen filter */}
-      <div className="capitalize">
-      <div className="filter-card">
-            <h1 className="filter-title">filter by</h1>
-            {/*order status */}
-            <div className="mb-6">
-              <h1 className="sub-title ">order status</h1>
-              <div>
-                <input
-                  type="checkbox"
-                  id="ontheway"
-                  className="custom-checkbox"
-                />
-                <label htmlFor="ontheway">On the way</label>
-              </div>
-              <div>
-                <input
-                  type="checkbox"
-                  id="delivered"
-                  className="custom-checkbox"
-                />
-                <label htmlFor="delivered">delivered</label>
-              </div>
-              <div>
-                <input
-                  type="checkbox"
-                  id="cancelled"
-                  className="custom-checkbox"
-                />
-                <label htmlFor="cancelled">cancelled</label>
-              </div>
-            </div>
-          </div>
+        <div className="">
+        {/* filter - for only lg screen  , md&sm-screen filter is in DrawerFilter*/}
+        <div className="">
           <div className="filter-card">
-            {/* <h1 className="filter-title">filter by</h1> */}
-            {/*order time */}
+            {/* title + reset all */}
+            <div className="flex justify-between items-center">
+              <h1 className="filter-title">filters</h1>
+              <div>
+                <Button
+                  variant="filled"
+                  className="px-3 py-0"
+                  onClick={handleResetAllFilters}
+                >
+                  reset all
+                </Button>
+              </div>
+            </div>
+            <div className="flex gap-2 flex-wrap">
+              {category && (
+                <div className="flex items-center justify-between gap-2 bg-black text-white rounded-[4px] py-[0.2rem] px-[0.5rem] text-[0.8rem] ">
+                  <span className="">{category}</span>
+                  <span
+                    onClick={() => {
+                      setCategory(null);
+                    }}
+                    className="cursor-pointer hover:text-red-400 hover:scale-125"
+                  >
+                    <RxCross2 />
+                  </span>
+                </div>
+              )}
+              {/* brand*/}
+              {brand && (
+                <div className="flex items-center justify-between gap-2 bg-black text-white rounded-[4px] py-[0.2rem] px-[0.5rem] text-[0.8rem] ">
+                  <span className="">{brand}</span>
+                  <span
+                    onClick={() => {
+                      setBrand(null);
+                    }}
+                    className="cursor-pointer hover:text-red-400 hover:scale-125"
+                  >
+                    <RxCross2 />
+                  </span>
+                </div>
+              )}
+
+              {/* max - min price */}
+              <div className="flex items-center">
+                {minPrice && (
+                  <div className="flex items-center justify-between gap-2 bg-black text-white rounded-[4px] py-[0.1rem] px-[0.5rem] text-[0.8rem] ">
+                    <span className="">{minPrice}</span>
+                    <span
+                      onClick={() => {
+                        setMinPrice(null);
+                      }}
+                      className="cursor-pointer hover:text-red-400 hover:scale-125"
+                    >
+                      <RxCross2 />
+                    </span>
+                  </div>
+                )}
+                {minPrice && maxPrice && <GoDash />}
+                {maxPrice && (
+                  <div className="flex items-center justify-between gap-2 bg-black text-white rounded-[4px] py-[0.1rem] px-[0.5rem] text-[0.8rem] ">
+                    <span className="">{maxPrice}</span>
+                    <span
+                      onClick={() => {
+                        setMaxPrice(null);
+                      }}
+                      className="cursor-pointer hover:text-red-400 hover:scale-125"
+                    >
+                      <RxCross2 />
+                    </span>
+                  </div>
+                )}
+              </div>
+
+                {/* color */}
+              {color && (
+                <div className="flex items-center justify-between gap-2 bg-black text-white rounded-[4px] py-[0.2rem] px-[0.5rem] text-[0.8rem] ">
+                <div
+                    className="w-5 h-5 rounded-full border-2"
+                    style={{
+                      backgroundColor: colors?.filter(
+                        (ele) => ele.id === color
+                      )[0]?.color,
+                    }}
+                  ></div>
+                  <span
+                    onClick={() => {
+                      setColor(null);
+                    }}
+                    className="cursor-pointer hover:text-red-400 hover:scale-125"
+                  >
+                    <RxCross2 />
+                  </span>
+                </div>
+              )}
+
+              {/* rating */}
+              {star && (
+                <div className="flex items-center justify-between gap-2 bg-black text-white rounded-[4px] py-[0.2rem] px-[0.5rem] text-[0.8rem] ">
+                  <span className="">{Array.from({ length: star }, (_, index) => (
+                      <span key={index}>⭐</span>
+                    ))}</span>
+                  <span
+                    onClick={() => {
+                      setStar(null);
+                    }}
+                    className="cursor-pointer hover:text-red-400 hover:scale-125"
+                  >
+                    <RxCross2 />
+                  </span>
+                </div>
+              )}
+
+              {/* tags */}
+              {tag && (
+                <div className="flex items-center justify-between gap-2 bg-black text-white rounded-[4px] py-[0.2rem] px-[0.5rem] text-[0.8rem] ">
+                  <span className="">{tag}</span>
+                  <span
+                    onClick={() => {
+                      setTag(null)
+                    }}
+                    className="cursor-pointer hover:text-red-400 hover:scale-125"
+                  >
+                    <RxCross2 />
+                  </span>
+                </div>
+              )}
+              
+
+            </div>
+          </div>
+          {/* filter-card :shop by categories*/}
+          <div className="filter-card">
+            <div className="flex justify-between items-center">
+              <h1 className="filter-title">shop by categories</h1>
+              <div>
+                <Button
+                  variant="outlined"
+                  className="px-3 py-0"
+                  onClick={() => setCategory(null)}
+                >
+                  reset
+                </Button>
+              </div>
+            </div>
+            <div>
+              <ul>
+                {categories?.map((ele, index) => (
+                  <li
+                    onClick={() => setCategory(ele)}
+                    style={{
+                      color: category === ele ? "#000000" : "#000000", // Example color
+                      backgroundColor: category === ele ? "#E91E63" : "#FFFFFF", // Example background color
+                      padding: "2px 12px",
+                      cursor: "pointer",
+                      borderRadius: "20px",
+                      transition: "all ease-in-out 0.2s",
+                    }}
+                  >
+                    {ele}
+                  </li>
+                ))}
+
+                {/* <li>watch</li>
+                <li>tv</li>
+                <li>camera</li>
+                <li>laptop</li> */}
+              </ul>
+            </div>
+          </div>
+          {/* filter by brands */}
+          <div className="filter-card">
+            <div className="flex justify-between items-center">
+              <h1 className="filter-title">shop by brands</h1>
+              <div>
+                <Button
+                  variant="outlined"
+                  className="px-3 py-0"
+                  onClick={() => setBrand(null)}
+                >
+                  reset
+                </Button>
+              </div>
+            </div>
+            <div>
+              <ul>
+                {brands?.map((ele) => (
+                  <li
+                    onClick={() => setBrand(ele)}
+                    style={{
+                      color: brand === ele ? "#000000" : "#000000",
+                      backgroundColor: brand === ele ? "#009688" : "#FFFFFF",
+                      padding: "2px 12px",
+                      cursor: "pointer",
+                      borderRadius: "20px",
+                      transition: "all ease-in-out 0.2s",
+                    }}
+                  >
+                    {ele}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+          {/* filter-card :filter by*/}
+          <div className="filter-card">
+            <h1 className="filter-title">filter by</h1>
+            {/*availability */}
             <div className="mb-6">
-              <h1 className="sub-title ">order time</h1>
+              <h1 className="sub-title">availablility</h1>
               <div>
                 <input
                   type="checkbox"
-                  id="last30days"
+                  id="instock"
                   className="custom-checkbox"
                 />
-                <label htmlFor="last30days">last 30 days</label>
+                <label htmlFor="instock">in stock</label>
               </div>
               <div>
-                <input type="checkbox" id="2023" className="custom-checkbox" />
-                <label htmlFor="2023">2023</label>
-              </div>
-              <div>
-                <input type="checkbox" id="2022" className="custom-checkbox" />
-                <label htmlFor="2022">2022</label>
+                <input
+                  type="checkbox"
+                  id="outofstock"
+                  className="custom-checkbox"
+                />
+                <label htmlFor="outofstock">out of stock(0)</label>
               </div>
             </div>
+
+            {/*price */}
+            <div className="mb-6">
+              <h1 className="sub-title">price</h1>
+              <div className="flex gap-2">
+                <div className="w-28">
+                  <Input
+                    placeholder="From"
+                    className="!border !border-gray-300 bg-white text-gray-900 shadow-lg shadow-gray-900/5 ring-4 ring-transparent placeholder:text-gray-500 placeholder:opacity-100 focus:!border-gray-900 focus:!border-t-gray-900 focus:ring-gray-900/10"
+                    labelProps={{
+                      className: "hidden",
+                    }}
+                    containerProps={{ className: "min-w-[50px]" }}
+                    value={minPrice}
+                    onChange={(e) => setMinPrice(e.target.value)}
+                  />
+                </div>
+                <div className="w-28">
+                  <Input
+                    placeholder="To"
+                    className="!border !border-gray-300 bg-white text-gray-900 shadow-lg shadow-gray-900/5 ring-4 ring-transparent placeholder:text-gray-500 placeholder:opacity-100 focus:!border-gray-900 focus:!border-t-gray-900 focus:ring-gray-900/10"
+                    labelProps={{
+                      className: "hidden",
+                    }}
+                    containerProps={{ className: "min-w-[50px]" }}
+                    onChange={(e) => setMaxPrice(e.target.value)}
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/*colors */}
+            <div className="mb-6">
+              <div className="flex justify-between items-center">
+                <h1 className="filter-title">colors</h1>
+                <div>
+                  <Button
+                    variant="outlined"
+                    className="px-3 py-0"
+                    onClick={() => setColor(null)}
+                  >
+                    reset
+                  </Button>
+                </div>
+              </div>
+              <ul className="colors grid grid-cols-8 gap-1">
+                {colors?.map((ele) => (
+                  <li
+                    onClick={() => setColor(ele.id)}
+                    className=""
+                    style={{
+                      backgroundColor: `${ele.color}`,
+                      outline: color === ele.id ? "2px solid skyblue" : "",
+                      border: color === ele.id ? "2px solid #fff" : "",
+                      padding: "2px",
+                      // transition: "all ease-in-out 0.1s",
+                    }}
+                  ></li>
+                ))}
+              </ul>
+            </div>
+
+            {/* size */}
+            {/* <div className="mb-6">
+              <h1 className="sub-title">size</h1>
+              <div>
+                <input type="checkbox" id="small" className="custom-checkbox" />
+                <label htmlFor="small">S</label>
+              </div>
+              <div>
+                <input
+                  type="checkbox"
+                  id="medium"
+                  className="custom-checkbox"
+                />
+                <label htmlFor="medium">M</label>
+              </div>
+              <div>
+                <input type="checkbox" id="large" className="custom-checkbox" />
+                <label htmlFor="large">L</label>
+              </div>
+              <div>
+                <input type="checkbox" id="xl" className="custom-checkbox" />
+                <label htmlFor="xl">XL</label>
+              </div>
+              <div>
+                <input type="checkbox" id="xxl" className="custom-checkbox" />
+                <label htmlFor="xxl">XXL</label>
+              </div>
+            </div> */}
+
+            {/* filter by ratings */}
+            <div className="mb-6">
+              <div className="flex justify-between items-center">
+                <h1 className="filter-title">filter by ratings</h1>
+                <div>
+                  <Button
+                    variant="outlined"
+                    className="px-3 py-0"
+                    onClick={() => setStar(null)}
+                  >
+                    reset
+                  </Button>
+                </div>
+              </div>
+              <Rating value={star} onChange={(value) => setStar(value)} />
+            </div>
           </div>
+
+          {/* filter-card:product tags */}
+          <div className="filter-card">
+            <div className="flex justify-between items-center">
+              <h1 className="filter-title">product tags</h1>
+              <div>
+                <Button
+                  variant="outlined"
+                  className="px-3 py-0"
+                  onClick={() => setTag(null)}
+                >
+                  reset
+                </Button>
+              </div>
+            </div>
+            <div className="tags-container">
+              {tags?.map((ele) => (
+                <span
+                  className="tags"
+                  onClick={() => setTag(ele)}
+                  style={{
+                    backgroundColor: ele === tag ? "black" : "",
+                    color: ele === tag ? "#fff" : "#000",
+                  }}
+                >
+                  {ele}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          
+        </div>
+
+       
       </div>
     </Drawer>
   );
