@@ -14,7 +14,7 @@ function ImageCarousel() {
           alt="image 1"
           className="h-full w-full object-cover"
         />
-        <div className="absolute inset-0 flex h-full w-full items-start mt-8 ml-8 md:mt-40 md:ml-10 lg:ml-10 lg:mt-20">
+        <div className="absolute  w-full h-full top-0 left-0 lg:pt-20 lg:pl-12 lg:pr-0 md:pt-28 md:pl-10 md:pr-20 pt-12 pl-10 pr-20">
           <div className="w-full px-4 md:px-8 lg:w-1/2 lg:px-0 lg:ml-6">
             <Typography
               variant="h1"
@@ -33,7 +33,7 @@ function ImageCarousel() {
             <Typography
               variant="lead"
               color="white"
-              className="mb-6 opacity-80 text-sm lg:mt-7 sm:text-base md:text-lg lg:text-xl lg:text-gray-800 text-black"
+              className="mb-6 opacity-80 lg:mt-7 md:text-lg lg:text-xl text-xs lg:text-gray-800 text-black"
             >
               From $999.00 or $41.62/mo. for 24 mo. footnote.
             </Typography>
@@ -51,7 +51,7 @@ function ImageCarousel() {
           alt="image 2"
           className="h-full w-full object-cover"
         />
-        <div className="absolute inset-0 flex h-full w-full items-start mt-8 ml-8 md:mt-40 md:ml-10 lg:ml-10 lg:mt-20">
+        <div className="absolute  w-full h-full top-0 left-0 lg:pt-20 lg:pl-12 lg:pr-0 md:pt-28 md:pl-10 md:pr-20 pt-12 pl-10 pr-20">
           <div className="w-full px-4 md:px-8 lg:w-1/2 lg:px-0 lg:ml-6">
             <Typography
               variant="h1"
@@ -70,7 +70,7 @@ function ImageCarousel() {
             <Typography
               variant="lead"
               color="white"
-              className="mb-6 opacity-80 text-sm lg:mt-7 sm:text-base md:text-lg lg:text-xl lg:text-gray-800 text-black"
+              className="mb-6 opacity-80 lg:mt-7 md:text-lg lg:text-xl text-xs lg:text-gray-800 text-black"
             >
               From $999.00 or $41.62/mo. for 24 mo. footnote.
             </Typography>
@@ -88,7 +88,7 @@ function ImageCarousel() {
           alt="image 3"
           className="h-full w-full object-cover"
         />
-        <div className="absolute inset-0 flex h-full w-full items-start mt-8 ml-8 md:mt-40 md:ml-10 lg:ml-10 lg:mt-20">
+        <div className="absolute  w-full h-full top-0 left-0 lg:pt-20 lg:pl-12 lg:pr-0 md:pt-28 md:pl-10 md:pr-20 pt-12 pl-10 pr-20">
           <div className="w-full px-4 md:px-8 lg:w-1/2 lg:px-0 lg:ml-6">
             <Typography
               variant="h1"
@@ -107,7 +107,7 @@ function ImageCarousel() {
             <Typography
               variant="lead"
               color="white"
-              className="mb-6 opacity-80 text-sm lg:mt-7 sm:text-base md:text-lg lg:text-xl lg:text-gray-800 text-black"
+              className="mb-6 opacity-80 lg:mt-7 md:text-lg lg:text-xl text-xs lg:text-gray-800 text-black"
             >
               From $999.00 or $41.62/mo. for 24 mo. footnote.
             </Typography>
@@ -119,6 +119,8 @@ function ImageCarousel() {
           </div>
         </div>
       </div>
+
+
     </Carousel>
   );
 }

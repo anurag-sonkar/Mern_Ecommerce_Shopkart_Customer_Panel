@@ -122,3 +122,20 @@
 
 
 
+
+
+.custom-select .ant-select-selector {
+  background-color: #424242 !important; /* Background color for Select input */
+  color: white ;  /* Text color */
+  border: none; /* Optionally remove border */
+}
+
+.custom-select .ant-select-item {
+  background-color: #424242 !important; /* Background color for each option */
+  color: white ;  /* Text color for options */
+}
+
+.custom-select .ant-select-item-option-selected {
+  background-color: #575757 !important; /* Background color for selected option */
+  color: white ;  /* Text color for selected option */
+}
