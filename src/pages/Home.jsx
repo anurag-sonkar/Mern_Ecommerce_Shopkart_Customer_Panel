@@ -102,9 +102,81 @@ function Home() {
 
   console.log(products);
 
+  if(isLoading){
+    return (
+      <div className="lg:grid hidden grid-col-4 lg:grid-flow-col grid-flow-row gap-5 place-items-center py-8 px-5 ">
+      <div className="col-span-2">
+        <Space>
+          <Skeleton.Image
+            active={active}
+            style={{ width: "600px", height: "400px" }}
+          />
+        </Space>
+      </div>
+
+      <div className="col-span-2">
+      <div className="grid grid-cols-2 grid-rows-2 gap-2">
+        <div className="">
+          <Skeleton.Node
+            active={active}
+            style={{ width: "300px", height: "190px" }}
+          >
+            <DotChartOutlined
+              style={{
+                fontSize: 40,
+                color: "#bfbfbf",
+              }}
+            />
+          </Skeleton.Node>
+        </div>
+        <div>
+          <Skeleton.Node
+            active={active}
+            style={{ width: "300px", height: "190px" }}
+          >
+            <DotChartOutlined
+              style={{
+                fontSize: 40,
+                color: "#bfbfbf",
+              }}
+            />
+          </Skeleton.Node>
+        </div>
+        <div>
+          <Skeleton.Node
+            active={active}
+            style={{ width: "300px", height: "190px" }}
+          >
+            <DotChartOutlined
+              style={{
+                fontSize: 40,
+                color: "#bfbfbf",
+              }}
+            />
+          </Skeleton.Node>
+        </div>
+        <div>
+          <Skeleton.Node
+            active={active}
+            style={{ width: "300px", height: "190px" }}
+          >
+            <DotChartOutlined
+              style={{
+                fontSize: 40,
+                color: "#bfbfbf",
+              }}
+            />
+          </Skeleton.Node>
+        </div>
+      </div>
+      </div>
+    </div>
+    )
+  }
+
   return (
     <>
-      {products && products.length > 0 ? (
+      
         <div className="">
           {/* first section */}
           <section className="grid grid-cols-4 grid-rows-2 gap-2 lg:px-8 px-2 py-8">
@@ -487,77 +559,10 @@ function Home() {
 
           {/* special products - pending */}
         </div>
-      ) : (
+      
         
 
-          <div className="lg:grid hidden grid-col-4 lg:grid-flow-col grid-flow-row gap-5 place-items-center py-8 px-5 ">
-            <div className="col-span-2">
-              <Space>
-                <Skeleton.Image
-                  active={active}
-                  style={{ width: "600px", height: "400px" }}
-                />
-              </Space>
-            </div>
-
-            <div className="col-span-2">
-            <div className="grid grid-cols-2 grid-rows-2 gap-2">
-              <div className="">
-                <Skeleton.Node
-                  active={active}
-                  style={{ width: "300px", height: "190px" }}
-                >
-                  <DotChartOutlined
-                    style={{
-                      fontSize: 40,
-                      color: "#bfbfbf",
-                    }}
-                  />
-                </Skeleton.Node>
-              </div>
-              <div>
-                <Skeleton.Node
-                  active={active}
-                  style={{ width: "300px", height: "190px" }}
-                >
-                  <DotChartOutlined
-                    style={{
-                      fontSize: 40,
-                      color: "#bfbfbf",
-                    }}
-                  />
-                </Skeleton.Node>
-              </div>
-              <div>
-                <Skeleton.Node
-                  active={active}
-                  style={{ width: "300px", height: "190px" }}
-                >
-                  <DotChartOutlined
-                    style={{
-                      fontSize: 40,
-                      color: "#bfbfbf",
-                    }}
-                  />
-                </Skeleton.Node>
-              </div>
-              <div>
-                <Skeleton.Node
-                  active={active}
-                  style={{ width: "300px", height: "190px" }}
-                >
-                  <DotChartOutlined
-                    style={{
-                      fontSize: 40,
-                      color: "#bfbfbf",
-                    }}
-                  />
-                </Skeleton.Node>
-              </div>
-            </div>
-            </div>
-          </div>
-      )}
+         
     </>
   );
 }

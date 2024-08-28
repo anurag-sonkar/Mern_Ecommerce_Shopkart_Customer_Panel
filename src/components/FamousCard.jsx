@@ -2,12 +2,12 @@ import React from "react";
 import { IoMdHeart } from "react-icons/io";
 import { toast, Bounce } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
-import { addToWishlist } from "../features/products/productSlice";
+import { addToWishlist } from "../features/wishlist/wishlistSlice";
 import { Link } from "react-router-dom";
 
 export function FamousCard({ product }) {
   const dispatch = useDispatch();
-  const { wishlist, message } = useSelector((state) => state.products);
+  const { wishlist, message } = useSelector((state) => state.wishlist);
 
   const handleWishlistClick = (event) => {
     event.preventDefault();

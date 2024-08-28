@@ -39,11 +39,11 @@ const register = async (data)=>{
 
 }
 
-const getWishlist = async ()=>{
-    const response = await axios.get(`${auth_base_url}/wishlist` , getConfig())
-    console.log(response)
-    return response.data
-}
+// const getWishlist = async ()=>{
+//     const response = await axios.get(`${auth_base_url}/wishlist` , getConfig())
+//     console.log(response)
+//     return response.data
+// }
 
 const forgotPassword = async (data)=>{
     const response = await axios.post(`${auth_base_url}/auth/forgot-password` , data)
@@ -65,7 +65,7 @@ const resetPassword = async (data)=>{
 
 
 const authService = {
-    login,signOut,register,getWishlist,forgotPassword,resetPassword
+    login,signOut,register,forgotPassword,resetPassword
 }
 
 export default authService;

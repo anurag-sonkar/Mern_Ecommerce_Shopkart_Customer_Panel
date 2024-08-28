@@ -1,11 +1,13 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import productsService from './productsService';
+import { toast, Bounce } from "react-toastify";
+
 
 const initialState = {
   products: [],
   product : {},
   filteredProducts :[],
-  wishlist:{},
+  wishlist:[],
   productReview :{},
   isLoading: false,
   isError: false,
@@ -40,14 +42,14 @@ export const getProduct = createAsyncThunk('products/getProduct', async (id, thu
   }
 });
 
-export const addToWishlist = createAsyncThunk('products/addToWishlist', async (id, thunkAPI) => {
-  try {
-    return await productsService.addToWishlist(id);
-  } catch (error) {
-    const message = (error.response && error.response.data && error.response.data.error) || error.message || error.toString();
-    return thunkAPI.rejectWithValue(message);
-  }
-});
+// export const addToWishlist = createAsyncThunk('products/addToWishlist', async (id, thunkAPI) => {
+//   try {
+//     return await productsService.addToWishlist(id);
+//   } catch (error) {
+//     const message = (error.response && error.response.data && error.response.data.error) || error.message || error.toString();
+//     return thunkAPI.rejectWithValue(message);
+//   }
+// });
 
 export const addProductReview = createAsyncThunk('products/addProductReview', async (data, thunkAPI) => {
   try {
@@ -109,22 +111,49 @@ const productsSlice = createSlice({
         state.isSuccess = false;
         // state.message = action.payload.message;
       })
-      .addCase(addToWishlist.pending, (state) => {
-        state.message = "";
-        state.isLoading = true;
-      })
-      .addCase(addToWishlist.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.isSuccess = true;
-        state.wishlist = action.payload.response.wishlist;
-        state.message = action.payload.message;
-      })
-      .addCase(addToWishlist.rejected, (state, action) => {
-        state.isLoading = false;
-        state.isError = true;
-        state.isSuccess = false;
-        state.message = action.payload.message;
-      })
+      // .addCase(addToWishlist.pending, (state) => {
+      //   state.message = "";
+      //   state.isLoading = true;
+      // })
+      // .addCase(addToWishlist.fulfilled, (state, action) => {
+      //   state.isLoading = false;
+      //   state.isSuccess = true;
+      //   state.wishlist = action.payload.response.wishlist;
+      //   state.message = action.payload.message;
+
+      //   if(state.isSuccess){
+      //     toast.info(`${state.message}`, {
+      //       position: "top-center",
+      //       autoClose: 2000,
+      //       hideProgressBar: false,
+      //       closeOnClick: true,
+      //       pauseOnHover: true,
+      //       draggable: true,
+      //       progress: undefined,
+      //       theme: "dark",
+      //       transition: Bounce,
+      //       });
+      //   }
+      // })
+      // .addCase(addToWishlist.rejected, (state, action) => {
+      //   state.isLoading = false;
+      //   state.isError = true;
+      //   state.isSuccess = false;
+      //   state.message = action.payload.message;
+      //   if(state.isError){
+      //     toast.error(`${state.message || "error occured"}`, {
+      //       position: "top-center",
+      //       autoClose: 2000,
+      //       hideProgressBar: false,
+      //       closeOnClick: true,
+      //       pauseOnHover: true,
+      //       draggable: true,
+      //       progress: undefined,
+      //       theme: "dark",
+      //       transition: Bounce,
+      //       });
+      //   }
+      // })
       .addCase(addProductReview.pending, (state) => {
         state.message = "";
         state.isLoading = true;

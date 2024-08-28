@@ -25,11 +25,11 @@ const getProduct = async(id)=>{
   return response.data
 }
 
-const addToWishlist = async(id)=>{
-  const response = await axios.put(`${products_base_url}addtowishlist` ,{productId : id} ,getConfig())
-  // console.log(response.data)
-  return response.data
-}
+// const addToWishlist = async(id)=>{
+//   const response = await axios.put(`${products_base_url}addtowishlist` ,{productId : id} ,getConfig())
+//   console.log(response.data)
+//   return response.data
+// }
 
 const addProductReview = async(data)=>{
   const response = await axios.put(`${products_base_url}rating` ,data ,getConfig())
@@ -38,7 +38,6 @@ const addProductReview = async(data)=>{
 
 const productsService = {
   getAllProducts,
-  addToWishlist,
   getProduct,
   addProductReview,
   getAllFilterProducts

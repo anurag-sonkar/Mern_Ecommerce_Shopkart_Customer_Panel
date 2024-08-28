@@ -168,9 +168,22 @@ function Header() {
   //   console.log(`selected ${value}`);
   // };
 
+  if(isLoading){
+    return (
+<div className="py-5 flex flex-col gap-2">
+          <div className="flex gap-5 px-8">
+            <Skeleton.Input active={active} size={size} block={block} />
+            <Skeleton.Avatar active={active} size={size} shape={avatarShape} />
+          </div>
+          <div className="px-8">
+            <Skeleton.Input active={active} size={size} block={block} />
+          </div>
+        </div>
+    )
+  }
+
   return (
     <div>
-      {products && products.length > 0 ? (
         <nav className="w-full">
           <div className="lg:px-10 md:px-5 py-1 lg:flex md:flex hidden justify-between bg-black text-gray-400 capitalize">
             <p className="text-sm">free shipping over $100 & free returns</p>
@@ -412,17 +425,7 @@ function Header() {
             </div>
           </div>
         </nav>
-      ) : (
-        <div className="py-5 flex flex-col gap-2">
-          <div className="flex gap-5 px-8">
-            <Skeleton.Input active={active} size={size} block={block} />
-            <Skeleton.Avatar active={active} size={size} shape={avatarShape} />
-          </div>
-          <div className="px-8">
-            <Skeleton.Input active={active} size={size} block={block} />
-          </div>
-        </div>
-      )}
+        
     </div>
   );
 }

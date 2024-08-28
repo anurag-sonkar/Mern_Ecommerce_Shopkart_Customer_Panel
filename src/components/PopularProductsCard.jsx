@@ -16,10 +16,11 @@ import { FaRegEye } from "react-icons/fa";
 import { TbArrowsCross } from "react-icons/tb";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { addToWishlist } from "../features/products/productSlice";
+import { addToWishlist } from "../features/wishlist/wishlistSlice";
 import { IoMdHeart } from "react-icons/io";
 import { toast, Bounce } from "react-toastify";
 import { addToCart } from "../features/cart/cartSlice";
+import { getConfig } from "../utils/config";
 
 function PopularProductsCard({ product }) {
   const [toggleWishlist, setToggleWishlist] = useState(false);
@@ -85,20 +86,18 @@ function PopularProductsCard({ product }) {
     setColor(value)
   };
 
-  const { wishlist, message } = useSelector((state) => state.products);
-
   const handleWishlistClick = (event) => {
     event.preventDefault();
     event.stopPropagation();
-    const addWishlistPrmoise = dispatch(addToWishlist(product?._id)).unwrap();
-    toast.promise(
-      addWishlistPrmoise,
-      {
-        pending: "loading...",
-        success: `${message && message} ` || "whishlist",
-        error: `${message && message}` || "error occurred",
-      },
-      {
+
+    const checkState = getConfig()
+    const token = checkState?.headers?.Authorization?.split(" ")[1]
+
+    if(token){
+      dispatch(addToWishlist(product?._id))
+    }else{
+      navigate('/auth')
+      toast.info('required login', {
         position: "top-center",
         autoClose: 2000,
         hideProgressBar: false,
@@ -108,8 +107,28 @@ function PopularProductsCard({ product }) {
         progress: undefined,
         theme: "dark",
         transition: Bounce,
-      }
-    );
+        });
+    }
+    
+    // toast.promise(
+    //   addWishlistPrmoise,
+    //   {
+    //     pending: "loading...",
+    //     success: `${message && message} ` || "whishlist",
+    //     error: `${message && message}` || "error occurred",
+    //   },
+    //   {
+    //     position: "top-center",
+    //     autoClose: 2000,
+    //     hideProgressBar: false,
+    //     closeOnClick: true,
+    //     pauseOnHover: true,
+    //     draggable: true,
+    //     progress: undefined,
+    //     theme: "dark",
+    //     transition: Bounce,
+    //   }
+    // );
   };
 
   // Function to extract the first 10 words from a string
