@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { signOut } from "../features/auth/authSlice";
 import { toast, Bounce } from "react-toastify";
 import ForgotPassword from "./Authentication/ForgotPassword";
+import { MdKeyboardArrowRight } from "react-icons/md";
 
 function MyAccount() {
   // const {pathname} = useLocation()
@@ -49,9 +50,9 @@ function MyAccount() {
   }
 
   return (
-    <div className="px-10 py-5 grid grid-col--12 grid-flow-col gap-4  bg-gray-100 min-h-screen">
-      {/* first col */}
-      <div className="rounded-sm grid gap-3 h-fit">
+    <div className="lg:px-10 md:px-10 px-2 py-5 grid grid-col-12 lg:grid-flow-col md:grid-flow-col grid-flow-row gap-4  bg-gray-100 min-h-screen">
+      {/* first col - for lg,md */}
+      <div className="rounded-sm lg:grid md:grid gap-3 h-fit hidden">
         {/* first col - first row */}
         <div className="bg-white flex px-4 py-2 gap-4 items-center">
           <div>
@@ -179,6 +180,38 @@ function MyAccount() {
             </Link>
           </div>
         </div>
+      </div>
+
+      {/* first col - for sm */}
+      <div className="col-span-8 px-4 py-6 lg:hidden md:hidden grid grid-cols-2 rounded-md shadow-2xl place-items-center gap-4">
+      <div className="col-span-2 w-full h-full min-h-12">
+          <div className="">
+          <div className="text-lg font-bold">Hey! Anurag Sonkar</div>
+          <div className="flex items-center">
+          <Link to="/" className="text-gray-500">Explore </Link>
+          <MdKeyboardArrowRight/>
+          </div>
+          </div>
+      </div>
+          <Link to='/orders' className="border-[1px] border-blue-300 rounded-md flex items-center gap-3 w-full h-full px-6 py-2 shadow-md">
+            <img  src="../src/assets/orders.png" className="w-5 h-5"/>
+            <div className="font-semibold">Orders</div>
+          </Link>
+          <div className="border-[1px] border-blue-300 rounded-md flex items-center gap-3 w-full h-full px-6 py-2 shadow-md" onClick={() => setComponent("/profile")}>
+            <img  src="../src/assets/account.png" className="w-5 h-5"/>
+            <div className="font-semibold">Account</div>
+            
+          </div>
+          <div className="border-[1px] border-blue-300 rounded-md flex items-center gap-3 w-full h-full px-6 py-2 shadow-md" onClick={() => setComponent("/address")}>
+            <img  src="../src/assets/address.png" className="w-5 h-5"/>
+            <div className="font-semibold">Address</div>
+          </div>
+          <Link to='/whishlist' className="border-[1px] border-blue-300 rounded-md flex items-center gap-3 w-full h-full px-6 py-2 shadow-md">
+            <img  src="../src/assets/heart.png" className="w-5 h-5"/>
+            <div className="font-semibold">Wishlist</div>
+          </Link>
+          
+          
       </div>
 
       {/* second-col  - if profile */}

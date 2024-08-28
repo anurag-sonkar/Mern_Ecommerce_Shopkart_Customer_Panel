@@ -75,7 +75,7 @@ function Address() {
     dispatch(getAllAddress());
   }, [dispatch]);
   return (
-    <div className="max-w-4xl w-full h-max rounded-md px-4 py-8 sticky top-0">
+    <div className="w-full h-max rounded-md px-4 py-8 sticky top-0">
           
             <h2 className="text-2xl font-bold text-gray-800">
               Manage Addresses
@@ -179,9 +179,10 @@ function Address() {
                 {addresses?.details?.map((ele, index) => (
                   <label
                     key={index}
-                    className="relative flex justify-between gap-x-6 px-5 py-5 border-solid border-2 border-gray-200"
+                    className="relative flex lg:justify-between md:justify-between justify-center gap-x-6 px-5 py-5 border-solid border-2 border-gray-200 flex-wrap"
                     // onClick={() => setShippingInfo(ele._id)}
                     htmlFor={ele._id}
+                    
                   >
                     <div className="flex gap-x-4">
                       <input
@@ -195,7 +196,7 @@ function Address() {
                         <p className="text-sm font-semibold leading-6 text-gray-900">
                           {ele.firstname} {ele.lastname}
                         </p>
-                        <p className="mt-1 truncate text-xs leading-5 text-gray-500">
+                        <p className="mt-1 truncate text-xs leading-5 text-gray-500 max-w-40">
                           {ele.address.line}
                         </p>
                         <p className="mt-1 truncate text-xs leading-5 text-gray-500">
