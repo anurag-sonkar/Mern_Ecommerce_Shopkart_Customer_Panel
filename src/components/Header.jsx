@@ -32,7 +32,7 @@ import { Skeleton } from "antd";
 
 const navigation = [
   { name: "Home", href: "/", current: true },
-  { name: "Our Store", href: "/store", current: false },
+  { name: "Our Store", href: "/store/:info", current: false },
   { name: "Blogs", href: "/blogs", current: false },
   { name: "Contact", href: "/contact", current: false },
 ];

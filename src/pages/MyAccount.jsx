@@ -141,17 +141,6 @@ function MyAccount() {
 
             <div className="capitalize">
               <Link
-                onClick={() => setComponent("/my-review")}
-                className="block px-12 py-2 hover:bg-[#F5FAFF] hover:text-[#2874F0]"
-                style={{
-                  backgroundColor: `${
-                    component === "/my-review" ? "#F5FAFF" : ""
-                  }`,
-                }}
-              >
-                My reviews & ratings
-              </Link>
-              <Link
                 to="/whishlist"
                 className="block px-12 py-2 hover:bg-[#F5FAFF] hover:text-[#2874F0]"
               >
@@ -235,12 +224,7 @@ function MyAccount() {
         </div>
       )}
 
-      {/* second col - if my-review*/}
-      {component === "/my-review" && (
-        <div className="col-span-8 bg-white shadow-xl rounded-sm px-6">
-          <MyReviews />
-        </div>
-      )}
+      
     </div>
   );
 }

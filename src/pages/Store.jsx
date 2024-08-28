@@ -15,6 +15,7 @@ import {
 import { Rating } from "@material-tailwind/react";
 import { GoDash } from "react-icons/go";
 import { RxCross2 } from "react-icons/rx";
+import { useParams } from "react-router-dom";
 
 // const products = [
 //   {
@@ -70,6 +71,8 @@ import { RxCross2 } from "react-icons/rx";
 // ];
 
 function Store() {
+  const {info} = useParams()
+  console.log(info)
   const [openRight, setOpenRight] = React.useState(false);
   const openDrawerRight = () => setOpenRight(true);
   const [categories, setCategories] = useState(null);
@@ -166,6 +169,15 @@ function Store() {
     setTotalPage(Math.ceil(products?.length/limit))
 
   },[products])
+
+
+  // home page select based on category
+  useEffect(() => {
+    console.log(info)
+    if (info && info !== ':info') {
+      setCategory(info); // Automatically select category based on the URL parameter
+    }
+  }, [info]);
 
   useEffect(() => {
     dispatch(

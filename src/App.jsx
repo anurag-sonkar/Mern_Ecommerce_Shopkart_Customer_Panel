@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react'
-import { Routes, Route, useNavigate, useLocation } from 'react-router-dom'
+import React, { useEffect , useState } from 'react'
+import { Routes, Route, useNavigate, useLocation, Link } from 'react-router-dom'
 import Layout from './components/Layout'
 import Home from './pages/Home'
 import About from './pages/About'
@@ -27,40 +27,94 @@ import Orders from './pages/Orders'
 import Profile from './pages/MyAccount'
 import Address from './pages/Address'
 import MyAccount from './pages/MyAccount'
+import { CommentOutlined, CustomerServiceOutlined,AppstoreAddOutlined } from '@ant-design/icons';
+import { FloatButton, Switch } from 'antd';
+import { RxHome } from "react-icons/rx";
+import { IoStorefrontOutline } from "react-icons/io5";
+import { LiaBlogSolid } from "react-icons/lia";
+import { IoMdContacts } from "react-icons/io";
 
+import { FaOpencart } from "react-icons/fa";
 
 function App() {
-  // const navigate = useNavigate();
-  const dispatch = useDispatch();
-  // const {pathname} = useLocation() // will be on same page after reload page
- 
-
-  // const { user, isLoading, isError, isSuccess, message } = useSelector(
-  //   (state) => state.auth
-  // );
-
-  // useEffect(() => {
-  //   // console.log( user, isLoading, isError, isSuccess, message )
-  //   if (user) {
-  //     navigate(pathname);
-  //     // navigate('/');
-  //   } 
-  // }, [dispatch,user]);
-
   
-  // )
-  // console.log(JSON.parse(localStorage.getItem('user'))?.result?.token)
+  const [open, setOpen] = useState(false);
+ const navigate = useNavigate()
+ const location = useLocation();
 
- 
+ const isActive = (path) => location.pathname === path;
   return (
     <>
       <ScrollToTop />
+
+      <Link to='/addtocart' >
+      <FloatButton
+      shape="circle"
+      type="primary"
+      style={{
+        insetInlineEnd: 94,
+      }}
+      icon={<FaOpencart size={22} />}
+    />
+      </Link>
+
+
+      <div 
+      onMouseEnter={() => setOpen(true)} 
+      onMouseLeave={() => setOpen(false)}
+    >
+      <FloatButton.Group
+        open={open}
+        shape="square"
+        type='primary'
+        trigger="click"
+        style={{
+          insetInlineEnd: 34,
+        }}
+        icon={<AppstoreAddOutlined />}
+      >
+        {/* Apply a conditional active style based on the current location */}
+        <FloatButton 
+          icon={<RxHome />} 
+          onClick={() => navigate('/')} 
+          style={{
+            backgroundColor: isActive('/') ? '#1890ff' : 'white',  // Active color
+            color: isActive('/') ? 'white' : 'black',  // Change icon color
+          }}
+        />
+        <FloatButton 
+          icon={<IoStorefrontOutline />} 
+          onClick={() => navigate('/store/:info')} 
+          style={{
+            backgroundColor: isActive('/store/:info') ? '#1890ff' : 'white',
+            color: isActive('/store/:info') ? 'white' : 'black',
+          }}
+        />
+        <FloatButton 
+          icon={<LiaBlogSolid />} 
+          onClick={() => navigate('/blogs')} 
+          style={{
+            backgroundColor: isActive('/blogs') ? '#1890ff' : 'white',
+            color: isActive('/blogs') ? 'white' : 'black',
+          }}
+        />
+        <FloatButton 
+          icon={<IoMdContacts />} 
+          onClick={() => navigate('/contact')} 
+          style={{
+            backgroundColor: isActive('/contact') ? '#1890ff' : 'white',
+            color: isActive('/contact') ? 'white' : 'black',
+          }}
+        />
+      </FloatButton.Group>
+    </div>
+
       <Routes>
         <Route path='/' element={<Layout/>}>
           <Route index element={<Home/>} />
           <Route path='/about' element={<About/>} />
           <Route path='/contact' element={<Contact/>} />
-          <Route path='/store' element={<Store/>} />
+          <Route path='/store/:info' element={<Store/>} />
           <Route path='/product/:id' element={<SingleProduct/>} />
           <Route path='/blogs' element={<Blogs/>} />
           <Route path='/blog/:id' element={<SingleBlog/>} />
