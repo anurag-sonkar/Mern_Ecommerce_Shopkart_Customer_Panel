@@ -17,6 +17,7 @@ import Marquee from "react-fast-marquee";
 
 import { IoIosArrowBack } from "react-icons/io";
 import { IoIosArrowForward } from "react-icons/io";
+import { RxCross2 } from "react-icons/rx";
 
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -30,6 +31,7 @@ import { getAllProducts } from "../features/products/productSlice";
 
 import { DotChartOutlined } from "@ant-design/icons";
 import { Skeleton, Space } from "antd";
+import QR from "../components/QR";
 
 function Home() {
   // Skeleton
@@ -38,6 +40,8 @@ function Home() {
   const [size, setSize] = useState("large");
   const [buttonShape, setButtonShape] = useState("default");
   const [avatarShape, setAvatarShape] = useState("circle");
+
+  const [showQR , setShowQR] = useState(true)
 
   const dispatch = useDispatch();
   const { products, isLoading, isError, isSuccess, message } = useSelector(
@@ -211,6 +215,20 @@ function Home() {
             />
           </section>
 
+          {/* QR code show */}
+          {
+            showQR && <div className="sticky top-3/4 right-10 cursor-pointer z-10 inline-block" onClick={()=>setShowQR(false)}>
+            <div className="bg-white  rounded-lg relative">
+            <QR/>
+            </div>
+            <div className="absolute -top-3 -right-3 bg-black rounded-3xl p-[2px]">
+            <RxCross2 color="white"/>
+
+            </div>
+            
+          </div>
+
+          }
           {/* second section - for lg and md */}
           <section className="lg:block md:block hidden">
             <div className="w-full bg-gray-200 lg:px-16 px-2 py-8 flex lg:justify-between justify-center items-center gap-9 flex-wrap">
