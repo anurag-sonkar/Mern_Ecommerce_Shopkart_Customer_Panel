@@ -7,14 +7,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { Input, Space } from "antd";
 import { getMyOrders } from "../features/orders/ordersSlice";
 import OrderCard from "../components/OrderCard";
+import {Skeleton} from 'antd';
 const { Search } = Input;
+
 
 function Orders() {
   const [openRight, setOpenRight] = React.useState(false);
   const openDrawerRight = () => setOpenRight(true);
   const dispatch = useDispatch();
   const { orders, message, isLoading } = useSelector((state) => state.orders);
-  console.log(orders);
   const onSearch = (value, _e, info) => console.log(info?.source, value);
 
   useEffect(() => {
@@ -108,14 +109,22 @@ function Orders() {
           </div>
 
           {/* orders cards*/}
-          <div className="grid gap-2 my-4">
+          {
+            !isLoading ? <div className="grid gap-2 my-4">
             {orders &&
               orders.map((order) =>
                 order.orderItems.map((ele) => (
                   <OrderCard key={ele._id} order={ele} orderedAt={order.createdAt} />
                 ))
               )}
-          </div>
+          </div> : <div className='flex flex-col gap-2 py-4'>
+        {[...Array(4)].map((_, index) => (
+        <div key={index}>
+        <Skeleton.Input active="true" block="false" style={{height:"28vh"}}/>
+        </div>
+      ))}
+        </div>
+          }
         </div>
       </div>
     </div>

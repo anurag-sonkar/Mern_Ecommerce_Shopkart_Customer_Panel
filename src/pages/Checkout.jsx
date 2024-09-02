@@ -9,13 +9,14 @@ import {
 import { FaDeleteLeft } from "react-icons/fa6";
 import axios from "axios";
 import { getConfig } from "../utils/config";
-// import { config } from "../utils/config";
+import { toast, Bounce } from "react-toastify";
 
 function Checkout() {
   const dispatch = useDispatch();
-  const {cart} = useSelector(state=>state.cart)
+  const { cart } = useSelector((state) => state.cart);
   const { addresses, isLoading } = useSelector((state) => state.address);
-  // console.log("addresses",addresses)
+  const { user } = useSelector((state) => state.auth);
+  // console.log("addresses", addresses);
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
   const [email, setEmail] = useState("");
@@ -25,10 +26,11 @@ function Checkout() {
   const [state, setState] = useState("");
   const [zipcode, setZipcode] = useState("");
 
-
   /* */
-  const [shippingInfo,setShippingInfo] = useState(addresses?.details?.[0]?._id || "")
-  // console.log(shippingInfo)
+  const [shippingInfo, setShippingInfo] = useState(
+    addresses?.details?.[0]?._id || ""
+  );
+  // console.log(shippingInfo);
 
   const handleAutoFill = () => {
     // lastest address
@@ -48,6 +50,12 @@ function Checkout() {
       setState(info.address.state);
       setZipcode(info.address.zipcode);
     }
+
+    if (user && addresses === null) {
+      setFirstname(user.name.split(" ")[0] || "");
+      setLastname(user.name.split(" ")[1] || "");
+      setEmail(user.email || "");
+    }
   };
 
   const handleResetForm = () => {
@@ -64,11 +72,11 @@ function Checkout() {
   const handleCreateNewAddress = (e) => {
     e.preventDefault();
 
-    if(!line || !city || !state || !zipcode){
-      alert("Complete Address is required for shipping order")
-      return
+    if (!line || !city || !state || !zipcode) {
+      alert("Complete Address is required for shipping order");
+      return;
     }
-    dispatch(
+    const responsePromise = dispatch(
       createNewAddress({
         firstname,
         lastname,
@@ -81,98 +89,150 @@ function Checkout() {
           zipcode,
         },
       })
+    ).unwrap();
+
+    toast.promise(
+      responsePromise,
+      {
+        pending: "Adding Address...",
+        success: "Address Added successfully",
+        error: `failed!`,
+      },
+      {
+        position: "top-right",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        transition: Bounce,
+      }
     );
+
+    responsePromise.then(() => {
+      setFirstname("");
+      setLastname("");
+      setEmail("");
+      setPhone("");
+      setLine("");
+      setCity("");
+      setState("");
+      setZipcode("");
+    });
   };
 
-  const handleDeleteAddress = (event , id)=>{
-    event.stopPropagation()
-    event.preventDefault()
-    const response = confirm("confirm to remove address ?")
-    if(response){
-      dispatch(deleteAddress(id))
-    }else{
-      return
+  const handleDeleteAddress = (event, id) => {
+    event.stopPropagation();
+    event.preventDefault();
+    const response = confirm("confirm to remove address ?");
+    if (response) {
+      const deleteResponse = dispatch(deleteAddress(id)).unwrap();
+      toast.promise(
+        deleteResponse,
+        {
+          pending: "Deleting Address...",
+          success: "Address deleted successfully",
+          error: `deletion failed!`,
+        },
+        {
+          position: "top-right",
+          autoClose: 1500,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+          transition: Bounce,
+        }
+      );
+    } else {
+      return;
     }
-  }
+  };
 
-  const amount = cart?.cartTotal
+  const amount = cart?.cartTotal;
   const checkoutHandler = async () => {
-    if(!shippingInfo) {
-      alert("please select address")
-      return
+    if (!shippingInfo) {
+      alert("please select address");
+      return;
     }
     try {
-      const { data: { order } } = await axios.post("http://localhost:8000/checkout", {
-        amount
-      } , getConfig());
-  
+      const {
+        data: { order },
+      } = await axios.post(
+        "https://ecommerce-mern-shopkart-backend.onrender.com/checkout",
+        {
+          amount,
+        },
+        getConfig()
+      );
+
       const options = {
-        key: 'rzp_test_NjNjGfVWdK6cuq',
+        key: "rzp_test_NjNjGfVWdK6cuq",
         amount: order.amount,
         currency: "INR",
-        name: "MERN ECOMMERCE",
+        name: "SHOPKART",
         description: "RazorPay",
-        image: "https://avatars.githubusercontent.com/u/25058652?v=4",
+        image:
+          "https://res.cloudinary.com/dj6iduopf/image/upload/f_auto,q_auto/vvl2ogimy15apjt2e9s2",
         order_id: order.id,
         handler: async function (response) {
-          // const paymentData = {
-          //   razorpay_order_id: response.razorpay_order_id,
-          //   razorpay_payment_id: response.razorpay_payment_id,
-          //   razorpay_signature: response.razorpay_signature,
-          // };
-
           const orderData = {
             shippingInfo: shippingInfo,
-            paymentInfo : {
-            razorpay_order_id: response.razorpay_order_id,
-            razorpay_payment_id: response.razorpay_payment_id,
-            razorpay_signature: response.razorpay_signature,
+            paymentInfo: {
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature,
             },
             orderItems: cart?.products,
-            totalPrice:cart?.cartTotal,
-            totalPriceAfterDiscount:cart?.cartTotal,
-          }
-  
+            totalPrice: cart?.cartTotal,
+            totalPriceAfterDiscount: cart?.cartTotal,
+          };
+
           // Send the payment details to the backend for verification
-          const verificationResponse = await axios.post("http://localhost:8000/paymentVerification", orderData , config);
-          console.log(verificationResponse)
+          const verificationResponse = await axios.post(
+            "https://ecommerce-mern-shopkart-backend.onrender.com/paymentVerification",
+            orderData,
+            getConfig()
+          );
+          // console.log(verificationResponse);
           if (verificationResponse.data.success) {
-            console.log(verificationResponse.data.redirectUrl)
+            // console.log(verificationResponse.data.redirectUrl);
             window.location.href = verificationResponse.data.redirectUrl;
-        } else {
-            alert('Payment verification failed.');
-        }
-        
+          } else {
+            alert("Payment verification failed.");
+          }
         },
         prefill: {
           name: cart?.orderby?.name,
           email: cart?.orderby?.email,
-          contact: "9999999999"
+          contact: "9999999999",
         },
         notes: {
-          "address": "Razorpay Corporate Office"
+          address: "Razorpay Corporate Office",
         },
         theme: {
-          "color": "#121212"
-        }
+          color: "#121212",
+        },
       };
-  
+
       const razor = new window.Razorpay(options);
       razor.open();
     } catch (error) {
-      console.error("Error during checkout:", error);
+      // console.error("Error during checkout:", error);
     }
   };
-  
 
   useEffect(() => {
     dispatch(getAllAddress());
   }, [dispatch]);
 
-  useEffect(()=>{
-    setShippingInfo(addresses?.details?.[0]?._id || "")
-  },[handleCreateNewAddress])
-  
+  useEffect(() => {
+    setShippingInfo(addresses?.details?.[0]?._id || "");
+  }, [handleCreateNewAddress]);
 
   return (
     <div className="font-[sans-serif] bg-white">
@@ -184,19 +244,29 @@ function Checkout() {
                 {cart?.products?.map((ele, index) => (
                   <div key={index} className="flex items-start gap-4">
                     <div className="w-32 h-28 max-lg:w-24 max-lg:h-24 flex shrink-0 bg-gray-300 rounded-sm">
-                      <img src={ele?.product?.images?.[0]?.url} className="w-full object-contain" />
+                      <img
+                        src={ele?.product?.images?.[0]?.url}
+                        className="w-full object-contain"
+                      />
                     </div>
                     <div className="w-full">
-                      <h3 className="text-base text-white">{ele.product?.title}</h3>
+                      <h3 className="text-base text-white">
+                        {ele.product?.title}
+                      </h3>
                       <ul className="text-xs text-gray-300 space-y-2 mt-2">
                         <li className="flex flex-wrap gap-4">
-                          Color <span className="ml-auto w-4 h-4 rounded-full" style={{backgroundColor:`${ele.color}`}}></span>
+                          Color{" "}
+                          <span
+                            className="ml-auto w-4 h-4 rounded-full"
+                            style={{ backgroundColor: `${ele.color}` }}
+                          ></span>
                         </li>
                         <li className="flex flex-wrap gap-4">
                           Quantity <span className="ml-auto">{ele.count}</span>
                         </li>
                         <li className="flex flex-wrap gap-4">
-                          Total Price <span className="ml-auto">₹{ele.product?.price}</span>
+                          Total Price{" "}
+                          <span className="ml-auto">₹{ele.product?.price}</span>
                         </li>
                       </ul>
                     </div>
@@ -322,7 +392,7 @@ function Checkout() {
                 {addresses?.details?.map((ele, index) => (
                   <label
                     key={index}
-                    className="relative flex justify-between gap-x-6 px-5 py-5 border-solid border-2 border-gray-200"
+                    className="relative flex justify-between flex-wrap gap-x-6 px-5 py-5 border-solid border-2 border-gray-200"
                     onClick={() => setShippingInfo(ele._id)}
                     htmlFor={ele._id}
                   >
@@ -346,7 +416,7 @@ function Checkout() {
                         </p>
                       </div>
                     </div>
-                    <div className="sm:flex sm:flex-col sm:items-end">
+                    <div className="lg:px-0 md:px-0 px-8">
                       <p className="text-sm leading-6 text-gray-900">
                         Phone: {ele.phone}
                       </p>
@@ -354,7 +424,12 @@ function Checkout() {
                         {ele.address.city}
                       </p>
                     </div>
-                    <span onClick={(e)=>handleDeleteAddress(e,ele._id)} className="absolute top-1 right-2 w-3 h-3 cursor-pointer transition-all ease-in-out duration-200 shadow-2xl hover:scale-125"><FaDeleteLeft /></span>
+                    <span
+                      onClick={(e) => handleDeleteAddress(e, ele._id)}
+                      className="absolute top-1 right-2 w-3 h-3 cursor-pointer transition-all ease-in-out duration-200 shadow-2xl hover:scale-125"
+                    >
+                      <FaDeleteLeft />
+                    </span>
                   </label>
                 ))}
               </div>
@@ -396,7 +471,7 @@ function Checkout() {
                   </button>
                 </Link>
                 <button
-                onClick={checkoutHandler}
+                  onClick={checkoutHandler}
                   type="button"
                   className="rounded-md px-6 py-3 w-full text-sm tracking-wide bg-blue-600 hover:bg-blue-700 text-white"
                 >

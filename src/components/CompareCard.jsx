@@ -13,7 +13,7 @@ import { IoClose } from "react-icons/io5";
 
 function CompareCard({ product }) {
   const info = product.info;
-  console.log(info);
+  // console.log(info);
   return (
     <Card className="lg:w-64 relative group flex lg:flex-col flex-row">
       <CardHeader shadow={false} floated={false} className="h-56">

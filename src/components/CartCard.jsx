@@ -64,7 +64,7 @@ function CartCard({ item, refreshCart }) {
       <div className="col-span-2">
         <img
           src={item?.product?.images?.[0].url}
-          className="lg:w-60 lg:min-h-40 md:w-60 md:min-h-40 w-28 h-24 object-cover"
+          className="lg:w-60 lg:min-h-40 md:w-60 md:min-h-40 w-28 h-24 object-contain"
           alt={item?.product?.title}
         />
       </div>
@@ -113,7 +113,7 @@ function CartCard({ item, refreshCart }) {
 
       <span className="absolute top-2 right-0 w-3 h-3 cursor-pointer transition-all ease-in-out duration-200 shadow-2xl hover:scale-125">
         <img
-          src="../src/assets/delete-icon.png"
+          src="/assets/delete-icon.png"
           onClick={handleProductDelete}
         />
       </span>

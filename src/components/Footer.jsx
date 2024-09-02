@@ -13,7 +13,7 @@ function Footer() {
       {/* section-1 */}
       <div className="grid grid-cols-1 md:grid-cols-3 text-white text-center place-items-center py-10 gap-5">
         <div className="flex items-center gap-5 justify-center col-span-1 md:col-span-1">
-          <img src="../src/assets/newsletter.png" alt="Newsletter" />
+          <img src="/assets/newsletter.png" alt="Newsletter" />
           <p className="capitalize lg:text-xl text-2xl">
             sign up for newsletter
           </p>

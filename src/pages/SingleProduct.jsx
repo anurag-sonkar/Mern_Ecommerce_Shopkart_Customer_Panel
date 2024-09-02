@@ -20,6 +20,9 @@ import { Rating, Progress } from "@material-tailwind/react";
 import { Flex, Input } from "antd";
 const { TextArea } = Input;
 import PopularProductsCard from "../components/PopularProductsCard";
+import {Skeleton} from 'antd';
+import { addToWishlist } from "../features/wishlist/wishlistSlice";
+import { getConfig } from "../utils/config";
 
 function SingleProduct() {
   const [star, setStar] = useState("");
@@ -29,8 +32,8 @@ function SingleProduct() {
   const { id } = useParams();
   const { products, product, isLoading, isError, isSuccess, message } =
     useSelector((state) => state.products);
-  console.log(product);
-  const [count, setCount] = useState(1);
+
+    const [count, setCount] = useState(1);
   const [selectedColor, setSelectedColor] = useState(
     product?.color?.[0]?.color
   );
@@ -79,6 +82,33 @@ function SingleProduct() {
       });
     });
   };
+
+  const handleWishlistClick = (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+
+    const checkState = getConfig()
+    const token = checkState?.headers?.Authorization?.split(" ")[1]
+
+    if(token){
+      dispatch(addToWishlist(product?._id))
+    }else{
+      navigate('/auth')
+      toast.info('required login', {
+        position: "top-center",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        transition: Bounce,
+        });
+    }
+    
+  };
+
 
   const handleSubmitReview = () => {
     if (star === "" || comment === "") {
@@ -171,7 +201,8 @@ function SingleProduct() {
       </div>
 
       {/* grid container - 3/2/1 */}
-      <div className="grid gap-12">
+      {
+        !isLoading ? <div className="grid gap-12">
         <section className="grid grid-cols-8 lg:mx-10 md:mx-4 sm:mx-2 mt-6 bg-white p-4 lg:grid-flow-col grid-flow-row">
           {/* Image column 1 - for lg (option)*/}
           <main className="col-span-4 lg:block hidden">
@@ -186,7 +217,7 @@ function SingleProduct() {
                       >
                         <img
                           src={ele.url}
-                          className="max-w-[4rem] h-auto max-h-[4rem] object-cover cursor-pointer"
+                          className="max-w-[4rem] h-auto max-h-[4rem] object-cover cursor-pointer bg-no-repeat"
                           onMouseOver={(e) => toggleProductMouseIn(e, ele)}
                           onMouseOut={(e) => toggleProductMouseOut(e)}
                         />
@@ -214,7 +245,7 @@ function SingleProduct() {
             </div>
 
             <div className="tiles grid gap-2">
-              <p className="font-semibold text-xl">${product?.price}</p>
+              <p className="font-semibold text-xl">₹ {product?.price}</p>
               <div className="flex gap-2">
                 {product && product.totalrating && (
                   <RatingMUI rating={product?.totalrating} />
@@ -232,12 +263,14 @@ function SingleProduct() {
                   {product.category}
                 </div>
               </div>
-              <div className="flex gap-12 text-lg">
+              {
+                product?.brand !== '' && <div className="flex gap-12 text-lg">
                 <div className="font-semibold  capitalize w-32">brand:</div>
                 <div className="capitalize w-full text-left font-semibold text-gray-700">
                   {product.brand}
                 </div>
               </div>
+              }
               <div className="flex gap-12 text-lg">
                 <div className="font-semibold  capitalize w-32">qt. left:</div>
                 <div className="capitalize w-full text-left font-semibold text-gray-700">
@@ -246,7 +279,8 @@ function SingleProduct() {
               </div>
 
               {/* color */}
-              <div className="flex gap-12 text-lg my-3">
+             {
+              product?.color?.length > 0 &&  <div className="flex gap-12 text-lg my-3">
                 <div className="font-semibold capitalize w-32">colors:</div>
                 <div className="capitalize w-full text-left font-semibold text-gray-700 flex gap-1 flex-wrap">
                   {product?.color?.map((ele) => (
@@ -262,9 +296,11 @@ function SingleProduct() {
                     ></div>
                   ))}
                 </div>
-              </div>
+              </div> 
+             }
               {/* tags */}
-              <div className="flex gap-12 lg:text-lg md:text-lg text-xs my-3">
+              {
+                product?.tags?.length > 0 && <div className="flex gap-12 lg:text-lg md:text-lg text-xs my-3">
                 <div className="font-semibold  capitalize w-32 text-lg">tags:</div>
                 <div className="flex flex-wrap gap-2 items-center w-full text-left font-semibold text-gray-700">
                   {product.tags?.map((ele) => (
@@ -274,6 +310,7 @@ function SingleProduct() {
                   ))}
                 </div>
               </div>
+              }
 
               {/* availability */}
               <div className="flex gap-12 text-lg">
@@ -313,18 +350,18 @@ function SingleProduct() {
                 >
                   add to cart
                 </Button>
-                <Button className="rounded-full ">buy it now</Button>
+                <Button className="rounded-full " onClick={handleAddToCart}>buy it now</Button>
               </div>
 
-              <Button className="rounded-full bg-[#ff9100] text-xs">
+              <Button className="rounded-full bg-[#ff9100] text-xs" onClick={handleWishlistClick}>
                 wishlist
               </Button>
-              <Button className="rounded-full ">compare</Button>
+              <Button className="rounded-full " onClick={()=>alert("Compare functionality is in develpment phase please try later 😊")}>compare</Button>
             </div>
 
             <div className="py-[1rem] grid place-items-center gap-4">
               <h1 className=" font-semibold capitalize">payment methods</h1>
-              <img src="../src/assets/pay.png" />
+              <img src="/assets/pay.png" />
             </div>
           </main>
         </section>
@@ -333,25 +370,9 @@ function SingleProduct() {
         {product?.description ? (
           <section className="lg:mx-10 md:mx-4 mx-2 mt-6">
             <h1 className="font-semibold text-2xl my-2">Description</h1>
-            <div className="bg-white rounded-md lg:p-5 md:p-5 p-3 text-sm text-justify grid gap-5">
-              <p dangerouslySetInnerHTML={{ __html: product.description }} />
-              <p>
-                Waiting and watching. It was all she had done for the past
-                weeks. When you’re locked in a room with nothing but food and
-                drink, that’s about all you can do anyway. She watched as birds
-                flew past the window bolted shut. She couldn’t reach it if she
-                wanted too, with that hole in the floor. She thought she could
-                escape through it but three stories is a bit far down. He read
-                about a hike called the incline in the guidebook. It said it was
-                a strenuous hike and to bring plenty of water. “A beautiful hike
-                to the clouds” described one review. “Not for the
-                faint-hearted,” said another. “Not too bad of a workout”,
-                bragged a third review. I thought I’d hike it when I fly in from
-                Maryland on my day off from the senior citizen's wellness
-                conference. I hiked 2 miles a day around the neighborhood so I
-                could handle a 1.1-mile hike. What a foolish mistake that was
-                for a 70-year-old low-lander.
-              </p>
+            <div className=" bg-white rounded-md lg:p-5 md:p-5 p-3 text-sm text-justify grid gap-5">
+              <p className="overflow-x-auto" dangerouslySetInnerHTML={{ __html: product.description }} />
+              
             </div>
           </section>
         ) : (
@@ -513,7 +534,7 @@ function SingleProduct() {
                         <img
                           src={
                             ele?.postedby?.imgpath?.url ||
-                            "../src/assets/profile-fallback.svg"
+                            "/assets/profile-fallback.svg"
                           }
                           className="w-12 h-12 rounded-lg object-cover"
                         />
@@ -549,7 +570,17 @@ function SingleProduct() {
               })}
           </div>
         </section>
+      </div> : <div className=" py-4 px-10 flex flex-col gap-4">
+        <div className="grid lg:grid-cols-2 md:grid-cols-2 grid-cols-1 gap-4">
+        <Skeleton.Input active="true" block="false" style={{height:"68vh"}}/>
+        <Skeleton.Input active="true" block="false" style={{height:"68vh"}}/>
+        </div>
+        <div>
+
+        <Skeleton.Input active="true" block="false" style={{height:"80vh"}}/>
+        </div>
       </div>
+      }
     </div>
   );
 }

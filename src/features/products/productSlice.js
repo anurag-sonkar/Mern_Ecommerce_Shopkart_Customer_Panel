@@ -17,7 +17,6 @@ const initialState = {
 
 export const getAllFilterProducts = createAsyncThunk('products/getAllFilterProducts', async (data, thunkAPI) => {
   try {
-    // console.log(data)
     return await productsService.getAllFilterProducts(data);
   } catch (error) {
     const message = (error.response && error.response.data && error.response.data.error) || error.message || error.toString();

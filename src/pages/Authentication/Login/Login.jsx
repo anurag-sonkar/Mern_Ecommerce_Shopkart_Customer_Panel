@@ -45,52 +45,6 @@ useEffect(() => {
   }
 }, [error]);
 
-  // console.log(user)
-  // const handleLogin = () => {
-  //   if (!email || !password) {
-  //     setError("Please fill in all fields");
-  //   } else {
-  //     const authPromise =  dispatch(login({ email, password })).unwrap();
-  //     toast.promise(
-  //       authPromise,
-  //       {
-  //         pending: "loging...",
-  //         success: "login Successfully!",
-  //         error: `login failed!`,
-  //       },
-  //       {
-  //         position: "top-center",
-  //         autoClose: 2000,
-  //         hideProgressBar: false,
-  //         closeOnClick: true,
-  //         pauseOnHover: true,
-  //         draggable: true,
-  //         progress: undefined,
-  //         theme: "dark",
-  //         transition: Bounce,
-  //       }
-  //     ).catch((error)=>{
-  //       console.log(error.response.data.error)
-  //       toast.error(error.response.data.error, {
-  //         position: "top-center",
-  //         autoClose: 2000,
-  //         hideProgressBar: false,
-  //         closeOnClick: true,
-  //         pauseOnHover: true,
-  //         draggable: true,
-  //         progress: undefined,
-  //         theme: "dark",
-  //         transition: Bounce,
-  //         });
-  //     })
-
-  //     setError("");
-  //     authPromise.then(()=>{
-  //       navigate("/")
-  //     })
-  //   }
-  // };
-
   const handleLogin = async () => {
     const newErrors = validateForm();
     if (Object.keys(newErrors).length > 0) {
@@ -101,7 +55,7 @@ useEffect(() => {
     try {
       const authPromise = dispatch(login({ email, password })).unwrap();
       toast.promise(
-        authPromise,
+        authPromise, 
         {
           success: "Login Successfully!",
           error: "Login failed!",
@@ -113,22 +67,44 @@ useEffect(() => {
           transition: Bounce,
         }
       );
-  
-      // await authPromise;
-      authPromise.then(()=>{
-        localStorage.setItem('tour', JSON.stringify(true));
+      
+      authPromise.then(async ()=>{
+      // Perform post-login actions
       navigate('/');
+        
+        // set offline image
+        const response = await fetch('https://raw.githubusercontent.com/anurag-sonkar/Ecommerce_MERN_Shopkart_admin_panel/main/public/assets/offline.png')
+  
+        const blob = await response.blob();
+        const reader = new FileReader();
+  
+        reader.onloadend = () => {
+          const base64Image = reader.result;
+          localStorage.setItem("offline-image", base64Image);
+        };
+  
+        reader.readAsDataURL(blob);
+  
+        
       })
+      
+      
     } catch (error) {
-     // Handle login errors
-    setError({});
-    // Safely access the error message
-    const errorMessage = error.response?.data?.message || "An unexpected error occurred.";
-    setCatchError(errorMessage);
+      // Handle login errors
+      setError({});
+      const errorMessage = error?.response?.data?.error || error?.response?.data?.message || "An unexpected error occurred.";
+      setCatchError(errorMessage);
+  
+      //  show error in toast
+      toast.error(errorMessage, {
+        position: "top-center",
+        autoClose: 2000,
+        theme: "dark",
+        transition: Bounce,
+      });
     }
   };
 
-  console.log(catchError)
 
   useEffect(
     ()=>{

@@ -4,15 +4,14 @@ import { Button } from "@material-tailwind/react";
 import HelmetTitle from "../components/HelmetTitle";
 import { BreadCrumb } from "../components/BreadCrumb";
 import { Link } from "react-router-dom";
-import { IoIosArrowRoundForward } from "react-icons/io";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteAllCartProduct, getCart } from "../features/cart/cartSlice";
 import { toast ,Bounce} from 'react-toastify';
 
+
 function AddToCart() {
   const dispatch = useDispatch();
-  const { cart } = useSelector((state) => state.cart);
-  // console.log(cart);
+  const { cart , isLoading } = useSelector((state) => state.cart);
 
   const handleDeleteAllCartItems = () => {
     const deletePromise = dispatch(deleteAllCartProduct()).unwrap();
@@ -29,6 +28,8 @@ function AddToCart() {
         transition: Bounce,
       });
     });
+    fetchCart();
+
   };
 
   const fetchCart = () => {
@@ -59,20 +60,31 @@ function AddToCart() {
       <main className="w-full lg:px-10 px-2 bg-[#F1F3F6] grid grid-cols-8 gap-6 py-6 md:grid-flow-col grid-flow-row">
         {/* First grid col */}
         <section className="col-span-8 lg:col-span-5 bg-white px-6 py-3 rounded-sm shadow-lg">
-          {cart?.products?.map((item) => (
+      {
+        !cart && <div className="text-center py-4">
+          <h1 className=" text-2xl text-gray-600 font-semibold">Your Shopkart Cart is empty</h1>
+          <Link to='/store?type=tags&value=sale' className="text-blue-600 underline">Shop today’s deals</Link>
+        </div>
+      }
+          {
+            cart ? <>{cart?.products?.map((item) => (
             <div>
               <CartCard item={item} refreshCart={refreshCart} />
             </div>
-          ))}
+          ))}</> : <img src="/assets/empty-cart.jpg" />
+          }
 
-          <Link to="/checkout" className="w-full text-right pt-5">
-            <Button className="bg-[#FB641B] rounded-sm text-xl font-medium w-56">
+          {
+            cart && <Link to="/checkout" className="w-full text-right pt-5 inline-block">
+            <Button className="bg-[#FB641B] rounded-sm text-xl font-medium w-56 shadow-lg hover:shadow-2xl hover:shadow-orange-400">
               check out
             </Button>
           </Link>
+          }
         </section>
         {/* Second grid col */}
-        <section className="h-fit col-span-8 lg:col-span-3 bg-white w-full rounded-sm shadow-lg py-5">
+        {
+          cart && <section className="h-fit col-span-8 lg:col-span-3 bg-white w-full rounded-sm shadow-lg py-5">
           <h1 className="text-gray-500 uppercase font-semibold px-4 pb-2 border-b">
             price details
           </h1>
@@ -102,6 +114,8 @@ function AddToCart() {
             You will save ₹488 on this order
           </div>
         </section>
+        }
+        
       </main>
     </div>
   );

@@ -12,7 +12,7 @@ import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { FaOpencart } from "react-icons/fa";
 import CartCountBadge from "./CartCountBadge";
 import { TbCategory } from "react-icons/tb";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { UserOutlined } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
@@ -30,12 +30,12 @@ import { IoClose } from "react-icons/io5";
 import { DotChartOutlined } from "@ant-design/icons";
 import { Skeleton } from "antd";
 
-const navigation = [
-  { name: "Home", href: "/", current: true },
-  { name: "Our Store", href: "/store/:info", current: false },
-  { name: "Blogs", href: "/blogs", current: false },
-  { name: "Contact", href: "/contact", current: false },
-];
+// const navigation = [
+//   { name: "Home", href: "/", current: true },
+//   { name: "Our Store", href: "/store/:info", current: false },
+//   { name: "Blogs", href: "/blogs", current: false },
+//   { name: "Contact", href: "/contact", current: false },
+// ];
 
 /* check screen size for animation */
 const useScreenSize = () => {
@@ -61,6 +61,16 @@ function classNames(...classes) {
 }
 
 function Header() {
+  // navigation
+  const location = useLocation();
+
+const navigation = [
+  { name: "Home", href: "/", current: location.pathname === "/" },
+  { name: "Our Store", href: "/store", current: location.pathname.startsWith("/store") },
+  { name: "Blogs", href: "/blogs", current: location.pathname === "/blogs" },
+  { name: "Contact", href: "/contact", current: location.pathname === "/contact" },
+];
+
   // Skeleton
   const [active, setActive] = useState(true);
   const [block, setBlock] = useState(true);
@@ -77,7 +87,7 @@ function Header() {
   );
   const { cart } = useSelector((state) => state.cart);
   const [profile, setProfile] = useState(
-    user?.imgpath?.url || "../src/assets/profile.png"
+    user?.imgpath?.url || "/assets/profile.png"
   );
   const cartTotalItems = cart?.products?.reduce(
     (acc, product) => acc + product.count,
@@ -113,7 +123,7 @@ function Header() {
   };
 
   useEffect(() => {
-    setProfile(user?.imgpath?.url || "../src/assets/profile.png");
+    setProfile(user?.imgpath?.url || "/assets/profile.png");
     dispatch(getCart());
   }, [dispatch, user]);
 
@@ -132,7 +142,6 @@ function Header() {
 
   const [inputValue, setInputValue] = useState("");
   const handleSearch = (value) => {
-    console.log(value);
     if (value) {
       const product = products.find((product) => product.title === value);
       if (product) {
@@ -224,12 +233,12 @@ function Header() {
                   <div className="flex flex-shrink-0 items-center">
                     <img
                       alt="Your Company"
-                      src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
+                      src="https://res.cloudinary.com/dj6iduopf/image/upload/f_auto,q_auto/vvl2ogimy15apjt2e9s2"
                       className="h-8 w-auto"
                     />
                   </div>
                   <div className="hidden sm:ml-6 sm:block">
-                    <div className="flex space-x-4">
+                    <div className="flex space-x-4 items-center">
                       {navigation.map((item) => (
                         <Link
                           key={item.name}
@@ -237,9 +246,9 @@ function Header() {
                           aria-current={item.current ? "page" : undefined}
                           className={classNames(
                             item.current
-                              ? "bg-gray-900 text-white"
-                              : "text-gray-300 hover:bg-gray-700 hover:text-white",
-                            "rounded-md px-3 py-2 text-sm font-medium"
+                              ? "bg-gray-800 text-white"  // Active page styles
+                              : "text-gray-300 hover:bg-gray-700 hover:text-white", // Inactive page styles
+                            "rounded-md px-3 py-1 font-medium text-sm"
                           )}
                         >
                           {item.name}
@@ -251,7 +260,7 @@ function Header() {
 
                 {user ? (
                   <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-                    <div className="lg:flex md:flex hidden gap-2 mx-5 text-gray-500 capitalize items-center font-semibold ">
+                    <div className="lg:flex hidden gap-2 mx-5 text-gray-500 capitalize items-center font-semibold ">
                       <span className="text-2xl">welcome!</span>
                       <span className="text-xl">
                         {user?.name?.split(" ")[0]}
@@ -291,7 +300,10 @@ function Header() {
                             to="/myaccount"
                             className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100"
                           >
-                            My Account
+                            <div className="flex gap-3">
+                              <div><img src="/assets/icons8-user-16.png" className="w-4 h-auto" /></div>
+                              <div>My Account</div>
+                            </div>
                           </Link>
                         </MenuItem>
                         <MenuItem>
@@ -299,7 +311,10 @@ function Header() {
                             to="/whishlist"
                             className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100"
                           >
-                            Wishlist
+                            <div className="flex gap-3">
+                              <div><img src="/assets/icons8-wishlist-32.png" className="w-4 h-auto" /></div>
+                              <div>Wishlist</div>
+                            </div>
                           </Link>
                         </MenuItem>
                         <MenuItem>
@@ -307,7 +322,10 @@ function Header() {
                             to="/compare-products"
                             className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100"
                           >
-                            Compare Products
+                            <div className="flex gap-3">
+                              <div><img src="/assets/icons8-compare-50.png" className="w-4 h-auto" /></div>
+                              <div>Compare</div>
+                            </div>
                           </Link>
                         </MenuItem>
                         <MenuItem>
@@ -315,7 +333,10 @@ function Header() {
                             to="/orders"
                             className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100"
                           >
-                            My Orders
+                            <div className="flex gap-3">
+                              <div><img src="/assets/icons8-logistics-32.png" className="w-4 h-auto" /></div>
+                              <div>My Orders</div>
+                            </div>
                           </Link>
                         </MenuItem>
                         <MenuItem>
@@ -323,7 +344,10 @@ function Header() {
                             onClick={handleSignOut}
                             className="w-full text-left block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100"
                           >
-                            Sign out
+                            <div className="flex gap-3">
+                              <div><img src="/assets/icons8-logout-48.png" className="w-4 h-auto" /></div>
+                              <div>SignOut</div>
+                            </div>
                           </button>
                         </MenuItem>
                       </MenuItems>

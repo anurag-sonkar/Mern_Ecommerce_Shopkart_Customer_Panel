@@ -13,7 +13,7 @@ function BlogCard() {
               <Card className="my-6 lg:w-96 md:w-80">
                 <CardHeader color="blue-gray" className="relative h-56">
                   <img
-                    src="../src/assets/blog-1.jpg"
+                    src="/assets/blog-1.jpg"
                     className="transition-all ease-in-out duration-500 hover:scale-110"
                   />
                 </CardHeader>

@@ -13,14 +13,14 @@ export function PaginationCompo({ page, setPage, totalPage }) {
 
   const next = () => {
     if (page === totalPage) return;
-
     setPage(page + 1);
+    window.scrollTo(0, 0)
   };
 
   const prev = () => {
     if (page === 1) return;
-
     setPage(page - 1);
+    window.scrollTo(0, 0)
   };
 
   return (
@@ -33,7 +33,7 @@ export function PaginationCompo({ page, setPage, totalPage }) {
       >
         <ArrowLeftIcon strokeWidth={2} className="h-4 w-4" /> Previous
       </Button>
-      <div className="flex items-center gap-1 col-span-3">
+      <div className="flex items-center gap-1 col-span-3 lg:max-w-auto md:max-w-auto max-w-32" onClick={()=>window.scrollTo(0, 0)}>
         {Array.from({ length: totalPage }).map((_, index) => (
           <IconButton {...getItemProps(index + 1)}>{index + 1}</IconButton>
         ))}

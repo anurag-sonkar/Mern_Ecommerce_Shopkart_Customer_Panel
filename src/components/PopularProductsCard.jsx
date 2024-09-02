@@ -28,10 +28,10 @@ function PopularProductsCard({ product }) {
   const dispatch = useDispatch();
   const navigate = useNavigate()
   const {cart , isLoading} = useSelector(state=>state.cart)
-  const [color ,setColor] = useState(product.color[0].color)
+  const [color ,setColor] = useState(product?.color?.[0]?.color)
   // const [cartItems, setCartItems] = useState([]); 
   const getUserFromLocalStorage = JSON.parse(localStorage.getItem('user'))
-
+  
   const handleAddToCart = (event) => {
     event.preventDefault();
     event.stopPropagation();
@@ -52,7 +52,7 @@ function PopularProductsCard({ product }) {
   
       addToCartPromise.then(()=>{
         toast.info('🦄 Wow! item added to cart!', {
-          position: "top-center",
+          position: "bottom-center",
           autoClose: 2000,
           hideProgressBar: false,
           closeOnClick: true,
@@ -215,21 +215,23 @@ function PopularProductsCard({ product }) {
                 e.preventDefault();
                 e.stopPropagation();
               }}>
-            <Select
-              defaultValue={product?.color?.[0].color}
+            {
+              product.color.length > 0 && <Select
+              defaultValue={product?.color?.[0]?.color}
               style={{
               }}
               onChange={handleChange}
               options={product?.color?.map((ele) => ({
-                value: ele.color,
+                value: ele?.color,
                 label: (
                   <div
-                    style={{ backgroundColor: `${ele.color}` }}
+                    style={{ backgroundColor: `${ele?.color}` }}
                     className="w-5 h-5 rounded-full"
                   ></div>
                 ),
               }))}
             />
+            }
           </div>
         </Typography>
       </CardBody>

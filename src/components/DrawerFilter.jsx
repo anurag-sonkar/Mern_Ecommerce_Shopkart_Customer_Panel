@@ -24,7 +24,7 @@ export function DrawerFilter({ openRight, setOpenRight }) {
 
   const { filteredProducts, products, isLoading, isError, isSuccess, message } =
   useSelector((state) => state.products);
-console.log(products);
+// console.log(products);
 
 // filter states
 const [category, setCategory] = useState(null);

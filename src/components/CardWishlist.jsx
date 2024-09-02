@@ -1,17 +1,20 @@
 import { useState } from "react";
 import { toast, Bounce } from "react-toastify";
 import { addToWishlist } from "../features/wishlist/wishlistSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { MdDelete } from "react-icons/md";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { Popover, Space,Dropdown } from "antd";
 import { IoIosAdd } from "react-icons/io";
 import { getConfig } from "../utils/config";
+import { addToCart } from "../features/cart/cartSlice";
+
 
 export function CardWishlist(list) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const {cart , isLoading} = useSelector(state=>state.cart)
 
 
   const handleWishlistClick = () => {
@@ -36,6 +39,56 @@ export function CardWishlist(list) {
         });
     }
     
+  };
+
+
+  const handleAddToCart = (event) => {
+    event.preventDefault();
+    const checkState = getConfig()
+    const token = checkState?.headers?.Authorization?.split(" ")[1]
+
+    if(token){
+      const prodId = list?._id
+      const cartProducts = cart?.products 
+      // // console.log("PRODUCT",prodId)
+      // // console.log("CART",cartProducts)
+      let res = cartProducts?.filter(ele=>ele.list === prodId && ele.color === color)
+      // console.log("RESULT",res)
+  
+      const addToCartPromise =  dispatch(addToCart({
+        productId:list._id,
+        color:list.color?.[0],
+        count:res?.length > 0 ? res[0].count+1 : 1,
+      })).unwrap()
+  
+      addToCartPromise.then(()=>{
+        toast.info('🦄 Wow! item added to cart!', {
+          position: "bottom-center",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+          transition: Bounce,
+          });
+      })
+      
+    }else{
+      navigate('/auth')
+      toast.info('Login now', {
+        position: "bottom-center",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        transition: Bounce,
+        });
+    }
   };
 
   // Add useState hook for popover visibility
@@ -79,14 +132,14 @@ export function CardWishlist(list) {
     {
       key: '2',
       label: (
-          <div to="" className="flex items-center gap-2">
+          <div to="" className="flex items-center gap-2" onClick={(e)=>handleAddToCart(e)}>
             <IoIosAdd color="blue" />
             <p className=" text-blue-400">Add to cart</p>
           </div>
       ),
     }
   ];
-  console.log(list);
+  // console.log("list",list);
 
   return (
     <div className="grid grid-col-5 lg:grid-flow-col md:grid-flow-col grid-flow-row  py-6 gap-8 relative">

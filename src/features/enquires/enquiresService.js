@@ -5,7 +5,6 @@ import { getConfig } from "../../utils/config";
 
 const createEnquire = async (data) => {
     const response = await axios.post(`${enquiry_base_url}/`, data, getConfig());
-    console.log(response.data)
     return response.data;
   };
   

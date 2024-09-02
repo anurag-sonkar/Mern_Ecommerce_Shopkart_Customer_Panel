@@ -5,13 +5,15 @@
 // export const address_base_url = "http://localhost:8000/address"
 // export const orders_base_url = "http://localhost:8000/order"
 
-export const auth_base_url = "http://192.168.43.195:8000"
-export const products_base_url = "http://192.168.43.195:8000/product/"
-export const enquiry_base_url = "http://192.168.43.195:8000/enquiry"
-export const cart_base_url = "http://192.168.43.195:8000/cart"
-export const address_base_url = "http://192.168.43.195:8000/address"
-export const orders_base_url = "http://192.168.43.195:8000/order"
+export const auth_base_url = "https://ecommerce-mern-shopkart-backend.onrender.com"
+export const products_base_url = "https://ecommerce-mern-shopkart-backend.onrender.com/product/"
+export const enquiry_base_url = "https://ecommerce-mern-shopkart-backend.onrender.com/enquiry"
+export const cart_base_url = "https://ecommerce-mern-shopkart-backend.onrender.com/cart"
+export const address_base_url = "https://ecommerce-mern-shopkart-backend.onrender.com/address"
+export const orders_base_url = "https://ecommerce-mern-shopkart-backend.onrender.com/order"
 
+
+/* testing */
 // export const customers_base_url = "http://192.168.43.196:8000"
 // export const brands_base_url = "http://192.168.43.196:8000/brand"
 // export const product_category_base_url = "http://192.168.43.196:8000/product-category"

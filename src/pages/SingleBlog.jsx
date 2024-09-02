@@ -31,7 +31,7 @@ function SingleBlog() {
         {/* second -column */}
         <div className="lg:col-span-3 col-span-4 flex flex-col gap-4">
             <h1 className="text-black text-xl font-semibold capitalize">A beautiful sunday morning resistance</h1>
-            <img src="../src/assets/blog-1.jpg" className="w-full max-h-96 object-cover" />
+            <img src="/assets/blog-1.jpg" className="w-full max-h-96 object-cover" />
             <p className="text-gray-600">The place is close to Barceloneta Beach and bus stop just 2
                     min by walk and near to &quot;Naviglio&quot; where you can
                     enjoy the main night life in Barcelona.</p>

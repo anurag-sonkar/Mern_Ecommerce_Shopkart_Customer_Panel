@@ -28,7 +28,7 @@ const products = [
     id: 2,
     name: "Tablet",
     href: "#",
-    imageSrc: "../src/assets/tab.jpg",
+    imageSrc: "/assets/tab.jpg",
     imageAlt: "Front of men's Basic Tee in black.",
     price: "$35",
     discountedPrice:"$30",

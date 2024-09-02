@@ -133,7 +133,6 @@ function SignupForm({ setSignIn }) {
     formData.append("email", email);
     formData.append("password", password);
     formData.append("cpassword", confirmPassword);
-    formData.append("admin", true);
   
     if (image) {
       formData.append("photo", image);

@@ -3,9 +3,7 @@ import { auth_base_url } from "../../utils/base_url";
 import { getConfig } from "../../utils/config";
 
 const login = async (userData) => {
-    // console.log(userData)
     const response = await axios.post(`${auth_base_url}/auth/login`, userData);
-    console.log(response)
 
     if(response.data){
         localStorage.setItem('user',JSON.stringify(response.data))
@@ -22,7 +20,6 @@ const signOut = async ()=>{
           }
 
     }
-    // console.log(response.data)
     return response.data
     
 }
@@ -33,7 +30,6 @@ const register = async (data)=>{
         'Content-Type': 'multipart/form-data'
       }
     });
-    console.log(response)
     return response.data.result
 
 
@@ -41,13 +37,11 @@ const register = async (data)=>{
 
 // const getWishlist = async ()=>{
 //     const response = await axios.get(`${auth_base_url}/wishlist` , getConfig())
-//     console.log(response)
 //     return response.data
 // }
 
 const forgotPassword = async (data)=>{
     const response = await axios.post(`${auth_base_url}/auth/forgot-password` , data)
-    console.log(response)
     return response.data
 }
 

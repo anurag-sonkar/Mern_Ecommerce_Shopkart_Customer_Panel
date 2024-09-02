@@ -18,7 +18,7 @@ function MyAccount() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const [profile, setProfile] = useState(
-    user?.imgpath?.url || "../src/assets/profile-fallback.svg"
+    user?.imgpath?.url || "/assets/profile-fallback.svg"
   );
 
   const handleLogout = ()=>{
@@ -74,7 +74,7 @@ function MyAccount() {
             className="grid grid-flow-col items-center py-2 border-b-2"
           >
             <div className="flex gap-5">
-              <img src="../src/assets/order.svg" />
+              <img src="/assets/order.svg" />
               <div className="uppercase text-gray-600 font-semibold text-left cursor-pointer hover:text-[#2874F0] transition-all ease-in-out">
                 my orders
               </div>
@@ -87,7 +87,7 @@ function MyAccount() {
           {/* Account settings */}
           <div className=" py-2 border-b-2">
             <div className="flex gap-5 py-2">
-              <img src="../src/assets/order-user.svg" />
+              <img src="/assets/order-user.svg" />
               <div className="uppercase text-gray-600 font-semibold text-left cursor-pointer hover:text-[#2874F0] transition-all ease-in-out">
                 account settings
               </div>
@@ -133,7 +133,7 @@ function MyAccount() {
           {/* my stuff */}
           <div className=" py-2 border-b-2">
             <div className="flex gap-5 py-2">
-              <img src="../src/assets/order-mystuff.svg" />
+              <img src="/assets/order-mystuff.svg" />
               <div className="uppercase text-gray-600 font-semibold text-left cursor-pointer hover:text-[#2874F0] transition-all ease-in-out">
                 my stuff
               </div>
@@ -183,20 +183,20 @@ function MyAccount() {
           </div>
       </div>
           <Link to='/orders' className="border-[1px] border-blue-300 rounded-md flex items-center gap-3 w-full h-full px-6 py-2 shadow-md">
-            <img  src="../src/assets/orders.png" className="w-5 h-5"/>
+            <img  src="/assets/orders.png" className="w-5 h-5"/>
             <div className="font-semibold">Orders</div>
           </Link>
           <div className="border-[1px] border-blue-300 rounded-md flex items-center gap-3 w-full h-full px-6 py-2 shadow-md" onClick={() => setComponent("/profile")}>
-            <img  src="../src/assets/account.png" className="w-5 h-5"/>
+            <img  src="/assets/account.png" className="w-5 h-5"/>
             <div className="font-semibold">Account</div>
             
           </div>
           <div className="border-[1px] border-blue-300 rounded-md flex items-center gap-3 w-full h-full px-6 py-2 shadow-md" onClick={() => setComponent("/address")}>
-            <img  src="../src/assets/address.png" className="w-5 h-5"/>
+            <img  src="/assets/address.png" className="w-5 h-5"/>
             <div className="font-semibold">Address</div>
           </div>
           <Link to='/whishlist' className="border-[1px] border-blue-300 rounded-md flex items-center gap-3 w-full h-full px-6 py-2 shadow-md">
-            <img  src="../src/assets/heart.png" className="w-5 h-5"/>
+            <img  src="/assets/heart.png" className="w-5 h-5"/>
             <div className="font-semibold">Wishlist</div>
           </Link>
           

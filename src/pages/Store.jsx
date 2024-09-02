@@ -15,64 +15,12 @@ import {
 import { Rating } from "@material-tailwind/react";
 import { GoDash } from "react-icons/go";
 import { RxCross2 } from "react-icons/rx";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
+import { DotChartOutlined } from '@ant-design/icons';
+import { Skeleton} from 'antd';
 
-// const products = [
-//   {
-//     id: 1,
-//     name: "Basic Tee",
-//     href: "#",
-//     imageSrc:
-//       "https://images.unsplash.com/photo-1629367494173-c78a56567877?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=927&q=80",
-
-//     imageAlt: "Front of men's Basic Tee in black.",
-//     price: "$35",
-//     color: "Black",
-//   },
-//   {
-//     id: 2,
-//     name: "Basic Tee",
-//     href: "#",
-//     imageSrc: "../src/assets/tab.jpg",
-//     imageAlt: "Front of men's Basic Tee in black.",
-//     price: "$35",
-//     color: "Black",
-//   },
-//   {
-//     id: 3,
-//     name: "Basic Tee",
-//     href: "#",
-//     imageSrc:
-//       "https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg",
-//     price: "$35",
-//     color: "Black",
-//   },
-//   {
-//     id: 4,
-//     name: "Basic Tee",
-//     href: "#",
-//     imageSrc:
-//       "https://images.unsplash.com/photo-1629367494173-c78a56567877?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=927&q=80",
-//     imageAlt: "Front of men's Basic Tee in black.",
-//     price: "$35",
-//     color: "Black",
-//   },
-//   {
-//     id: 5,
-//     name: "Basic Tee",
-//     href: "#",
-//     imageSrc:
-//       "https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg",
-//     imageAlt: "Front of men's Basic Tee in black.",
-//     price: "$35",
-//     color: "Black",
-//   },
-//   // More products...
-// ];
 
 function Store() {
-  const {info} = useParams()
-  console.log(info)
   const [openRight, setOpenRight] = React.useState(false);
   const openDrawerRight = () => setOpenRight(true);
   const [categories, setCategories] = useState(null);
@@ -81,10 +29,10 @@ function Store() {
   const [colors, setColors] = useState(null);
 
   const dispatch = useDispatch();
+  let location = useLocation()
 
   const { filteredProducts, products, isLoading, isError, isSuccess, message } =
     useSelector((state) => state.products);
-  console.log(products);
 
   // filter states
   const [category, setCategory] = useState(null);
@@ -96,12 +44,12 @@ function Store() {
   const [star, setStar] = useState(null);
 
   // sort states
-  const [sortBy , setSortBy] = useState(null)
-  const [sortOrder , setSortOrder] = useState(null)
+  const [sortBy , setSortBy] = useState('createdAt')
+  const [sortOrder , setSortOrder] = useState('desc')
 
 
   // pagination states
-  const [limit , setLimit] = useState(2)
+  const [limit , setLimit] = useState(9) // max-limit = 9 set at backend
   const [page , setPage] = useState(1)
   const [totalPage , setTotalPage] = useState(Math.ceil(products?.length/limit) || '')
   // console.log(totalPage)
@@ -168,16 +116,9 @@ function Store() {
   useEffect(()=>{
     setTotalPage(Math.ceil(products?.length/limit))
 
-  },[products])
+  },[products,limit])
 
-
-  // home page select based on category
-  useEffect(() => {
-    console.log(info)
-    if (info && info !== ':info') {
-      setCategory(info); // Automatically select category based on the URL parameter
-    }
-  }, [info]);
+  
 
   useEffect(() => {
     dispatch(
@@ -194,8 +135,33 @@ function Store() {
         page
       })
     );
-  }, [category, brand, color, minPrice, maxPrice, tag, star,sortBy,sortOrder,limit,page]);
+  }, [category, brand, color, minPrice, maxPrice, tag, star,sortBy,sortOrder,limit,page , location]);
 
+  // home page select based on category
+  useEffect(() => {
+    // Extract the search (query string) from the location
+    const queryParams = new URLSearchParams(location.search);
+    
+    const type = queryParams.get('type')
+    const value = queryParams.get('value')
+
+    if(type === 'category'){
+     setCategory(value)
+    }
+
+    if(type === 'brand'){
+     setBrand(value)
+    }
+
+    if(type === 'tags'){
+     setTag(value)
+    }
+    
+ }, [location]);
+
+
+ 
+ 
   return (
     <div className="w-full bg-gray-200">
       <HelmetTitle title="Store" />
@@ -652,38 +618,40 @@ function Store() {
             </div>
 
             {/* grid view */}
-            <div className="lg:flex md:flex gap-3 hidden">
+            {/* <div className="lg:flex md:flex gap-3 hidden">
               <div className="text-gray-500 text-sm">{products?.length} Products</div>
-              {/* <div className="flex gap-1 items-center">
+              <div className="flex gap-1 items-center">
                 <div className="bg-blue-gray-100 p-1 rounded-sm cursor-pointer hover:bg-blue-gray-700 transition-colors ease-in-out duration-150">
                   <img
                     className="w-3 h-3 object-contain"
-                    src="../src/assets/gr.svg"
+                    src="/assets/gr.svg"
                   />
                 </div>
                 <div className="bg-blue-gray-100 p-1 rounded-sm cursor-pointer hover:bg-blue-gray-700 transition-colors ease-in-out duration-150">
                   <img
                     className="w-3 h-3 object-contain"
-                    src="../src/assets/gr2.svg"
+                    src="/assets/gr2.svg"
                   />
                 </div>
                 <div className="bg-blue-gray-100 p-1 rounded-sm cursor-pointer hover:bg-blue-gray-700 transition-colors ease-in-out duration-150">
                   <img
                     className="w-3 h-3 object-contain"
-                    src="../src/assets/gr3.svg"
+                    src="/assets/gr3.svg"
                   />
                 </div>
                 <div className="bg-blue-gray-100 p-1 rounded-sm cursor-pointer hover:bg-blue-gray-700 transition-colors ease-in-out duration-150">
                   <img
                     className="w-3 h-3 object-contain"
-                    src="../src/assets/gr4.svg"
+                    src="/assets/gr4.svg"
                   />
                 </div>
-              </div> */}
-            </div>
+              </div>
+            </div> */}
           </div>
           {/* second-row :  products -  */}
-          <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4 bg-white px-4 py-4 rounded-sm min-h-[160vh]">
+          {
+            !isLoading ? <>
+            <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4 bg-white px-4 py-4 rounded-sm min-h-[160vh]">
             {filteredProducts &&
               filteredProducts.length > 0 &&
               filteredProducts.map((product) => (
@@ -696,6 +664,16 @@ function Store() {
           <div className="grid place-items-end mt-2 py-3 px-2 rounded-md bg-white w-full">
             <PaginationCompo page={page} setPage={setPage} totalPage={totalPage}/>
           </div>
+            </>
+             : <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4 py-4">
+             {[...Array(limit)].map((_, index) => (
+        <div key={index}>
+        <Skeleton.Input active="true" block="false" style={{width:"260px" , height:"360px"}}/>
+        </div>
+      ))}
+
+             </div>
+          }
         </div>
       </div>
     </div>

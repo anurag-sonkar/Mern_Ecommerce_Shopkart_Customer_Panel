@@ -7,7 +7,6 @@ import { getConfig } from "../../utils/config";
 const getMyOrders = async () => {
 
     const response = await axios.get(`${orders_base_url}`, getConfig());
-    console.log(response)
     return response.data;
 };
 

@@ -18,7 +18,6 @@ function ResetPassword() {
     dispatch(resetPassword({token , password}))
   }
 
-  console.log(token)
 
   return (
     <main className="grid min-h-full place-items-center bg-gray-200 px-6 py-10 sm:py-16 lg:px-8">

@@ -4,7 +4,6 @@ import { getConfig } from "../../utils/config";
 // import { config } from "../../utils/config"; 
 
 const createNewAddress = async (formData) => {
-    console.log(formData)
     const response = await axios.post(`${address_base_url}/`, formData, getConfig());
     return response.data;
 };
@@ -18,14 +17,12 @@ const getAllAddress = async () => {
 const deleteAddress = async (id) => {
     
     const response = await axios.delete(`${address_base_url}/${id}`, getConfig());
-    console.log(response)
     return response.data;
 };
 
 // const deleteAllCartProduct = async () => {
 
 //     const response = await axios.delete(`${address_base_url}`, config);
-//     console.log(response.data)
 //     return response.data;
 // };
 
