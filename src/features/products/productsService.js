@@ -11,6 +11,7 @@ const getAllFilterProducts = async (data) => {
   const response = await axios.get(`${products_base_url}?category=${category || ''}&brand=${brand || ''}&color=${colorEncoded}&minPrice=${minPrice||''}&maxPrice=${maxPrice||''}&tag=${tag||''}&totalrating=${star||''}&sortBy=${sortBy||''}&sortOrder=${sortOrder}&limit=${limit||''}&page=${page||''}`, getConfig());
 
   console.log(response.data)
+  return response.data;
 
 };
 

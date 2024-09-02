@@ -665,10 +665,10 @@ function Store() {
             <PaginationCompo page={page} setPage={setPage} totalPage={totalPage}/>
           </div>
             </>
-             : <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4 py-4">
+             : <div className="grid lg:grid-cols-3 place-items-center md:grid-cols-2 grid-cols-1 gap-4 py-4">
              {[...Array(limit)].map((_, index) => (
         <div key={index}>
-        <Skeleton.Input active="true" block="false" style={{width:"260px" , height:"360px"}}/>
+        <Skeleton.Input active="true" block="false" style={{width:"275px" , height:"360px"}}/>
         </div>
       ))}
 
