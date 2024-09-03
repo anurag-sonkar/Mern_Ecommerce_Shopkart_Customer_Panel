@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function OrderCard({ order, orderedAt }) {
-//   console.log(order);
-
+  const navigate = useNavigate();
+  console.log(order)
   function formatOrderDate(orderDate) {
     const dateStr = orderDate;
     const date = new Date(dateStr);
@@ -43,9 +43,15 @@ function OrderCard({ order, orderedAt }) {
     return first10Words.join(" ");
   };
 
-//   useEffect(() => {}, []);
+  // handleRateReviewClick
+
+  const handleRateReviewClick = (e)=>{
+    e.preventDefault()
+    navigate(`/product/${order?.product?._id}`, { state: { scrollToReview: true } });
+  }
+
   return (
-    <div className="grid grid-cols-5 px-6 py-5 bg-white shadow-2xl border-2 border-blue-600 rounded-md">
+      <div className="grid grid-cols-5 px-6 py-5 bg-white shadow-2xl border-2 border-blue-600 rounded-md">
       {/* title- img col */}
       <div className="flex gap-2 lg:col-span-2 md:col-span-2 col-span-4">
         <img
@@ -76,9 +82,9 @@ function OrderCard({ order, orderedAt }) {
           {formatOrderDate(orderedAt)}
         </div>
         <div className="text-sm">Your item has been delivered</div>
-        <Link to="/" className="text-blue-600 font-semibold">
+        <div  onClick={(e)=>handleRateReviewClick(e)} className="text-blue-600 font-semibold hover:underline underline-offset-8">
           ⭐ rate & review product
-        </Link>
+        </div>
       </div>
     </div>
   );

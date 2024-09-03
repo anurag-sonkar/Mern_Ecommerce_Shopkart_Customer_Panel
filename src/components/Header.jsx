@@ -230,13 +230,13 @@ const navigation = [
                   </DisclosureButton>
                 </div>
                 <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
-                  <div className="flex flex-shrink-0 items-center">
+                  <Link to='/' className="flex flex-shrink-0 items-center">
                     <img
-                      alt="Your Company"
+                      alt="company logo"
                       src="https://res.cloudinary.com/dj6iduopf/image/upload/f_auto,q_auto/vvl2ogimy15apjt2e9s2"
                       className="h-8 w-auto"
                     />
-                  </div>
+                  </Link>
                   <div className="hidden sm:ml-6 sm:block">
                     <div className="flex space-x-4 items-center">
                       {navigation.map((item) => (

@@ -9,6 +9,7 @@ import { Popover, Space,Dropdown } from "antd";
 import { IoIosAdd } from "react-icons/io";
 import { getConfig } from "../utils/config";
 import { addToCart } from "../features/cart/cartSlice";
+import { PiShoppingCartSimpleDuotone } from "react-icons/pi";
 
 
 export function CardWishlist(list) {
@@ -17,7 +18,9 @@ export function CardWishlist(list) {
   const {cart , isLoading} = useSelector(state=>state.cart)
 
 
-  const handleWishlistClick = () => {
+  const handleWishlistClick = (e) => {
+    e.preventDefault()
+    e.stopPropagation()
 
     const checkState = getConfig()
     const token = checkState?.headers?.Authorization?.split(" ")[1]
@@ -43,6 +46,8 @@ export function CardWishlist(list) {
 
 
   const handleAddToCart = (event) => {
+    event.preventDefault()
+    event.stopPropagation()
     event.preventDefault();
     const checkState = getConfig()
     const token = checkState?.headers?.Authorization?.split(" ")[1]
@@ -165,7 +170,7 @@ export function CardWishlist(list) {
           <div className="font-semibold text-green-600 text-sm">18% off</div>
         </div>
       </div>
-      <div className="col-span-1 lg:block md:block hidden">
+      <div className="col-span-1 lg:grid md:grid hidden place-items-center">
         <Popover
           content={content}
           title="Are you sure you want to remove this product?"
@@ -181,6 +186,12 @@ export function CardWishlist(list) {
             className="cursor-pointer"
           />
         </Popover>
+
+        <div to="" className="flex items-center gap-2" onClick={(e)=>handleAddToCart(e)}>
+            <PiShoppingCartSimpleDuotone  color="gray"
+            size={25} />
+            
+          </div>
       </div>
       <div className="lg:hidden md:hidden block absolute top-2 right-2 border-[1px] rounded-3xl p-1 shadow-lg">
         <Dropdown

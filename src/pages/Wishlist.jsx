@@ -4,6 +4,7 @@ import { getWishlist } from "../features/wishlist/wishlistSlice";
 import { toast, Bounce } from "react-toastify";
 import { CardWishlist } from "../components/CardWishlist";
 import { Skeleton } from "antd";
+import { Link } from "react-router-dom";
 
 export default function Wishlist() {
   const dispatch = useDispatch();
@@ -50,10 +51,10 @@ export default function Wishlist() {
           wishlist.length > 0 ? (
             <div className="px-8 py-5">
             {wishlist.map((list) => (
-              <div key={list?._id}>
+              <Link key={list?._id} to={`/product/${list?._id}`}>
                 <CardWishlist {...list} />
                 <hr></hr>
-              </div>
+              </Link>
             ))}
           </div>
           ) : <div className="flex flex-col justify-center items-center py-10 gap-6">

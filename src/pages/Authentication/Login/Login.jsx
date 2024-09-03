@@ -61,8 +61,8 @@ useEffect(() => {
           error: "Login failed!",
         },
         {
-          position: "top-right",
-          autoClose: 5000,
+          position: "top-center",
+          autoClose: 2000,
           theme: "dark",
           transition: Bounce,
         }

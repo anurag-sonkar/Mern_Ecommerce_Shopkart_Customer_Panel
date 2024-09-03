@@ -8,6 +8,7 @@ import { Input, Space } from "antd";
 import { getMyOrders } from "../features/orders/ordersSlice";
 import OrderCard from "../components/OrderCard";
 import {Skeleton} from 'antd';
+import { Link } from "react-router-dom";
 const { Search } = Input;
 
 
@@ -17,7 +18,7 @@ function Orders() {
   const dispatch = useDispatch();
   const { orders, message, isLoading } = useSelector((state) => state.orders);
   const onSearch = (value, _e, info) => console.log(info?.source, value);
-
+  console.log(orders)
   useEffect(() => {
     dispatch(getMyOrders());
   }, []);
@@ -114,7 +115,9 @@ function Orders() {
             {orders &&
               orders.map((order) =>
                 order.orderItems.map((ele) => (
-                  <OrderCard key={ele._id} order={ele} orderedAt={order.createdAt} />
+                  <Link key={ele._id} to={`/product/${ele?.product?._id}`}>
+                  <OrderCard  order={ele} orderedAt={order.createdAt} />
+                  </Link>
                 ))
               )}
           </div> : <div className='flex flex-col gap-2 py-4'>

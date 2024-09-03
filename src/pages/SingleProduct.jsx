@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import HelmetTitle from "../components/HelmetTitle";
 import { BreadCrumb } from "../components/BreadCrumb";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import CarousalSingleProduct from "../components/CarousalSingleProduct";
 import RatingMUI from "../components/RatingMUI";
 import { Button } from "@material-tailwind/react";
@@ -28,6 +28,10 @@ function SingleProduct() {
   const [star, setStar] = useState("");
   const [comment, setComment] = useState("");
   const [toggleReviewForm, setToggleReviewForm] = useState(false);
+
+  const reviewRef = useRef(null);
+  const location = useLocation();
+
   const dispatch = useDispatch();
   const { id } = useParams();
   const { products, product, isLoading, isError, isSuccess, message } =
@@ -192,6 +196,18 @@ function SingleProduct() {
     const result = (count / totalRatings) * 100;
     return result.toFixed(0);
   }
+
+  // Scroll to the review section if navigated with scrollToReview
+setTimeout(
+  ()=>{
+      if (location.state?.scrollToReview && reviewRef.current) {
+        reviewRef.current.scrollIntoView({ behavior: 'smooth' });
+      }
+    
+      // setToggleReviewForm(true)
+  },[1000]
+)
+
 
   return (
     <div className="w-full bg-gray-200">
@@ -379,8 +395,8 @@ function SingleProduct() {
           ""
         )}
 
-        {/*  */}
-        <section className="lg:mx-10 md:mx-4 mx-2 mt-6 bg-white px-6 py-12 mb-12 rounded-lg ">
+        {/* rating and review section */}
+        <section className="lg:mx-10 md:mx-4 mx-2 mt-6 bg-white px-6 py-12 mb-12 rounded-lg "  ref={reviewRef} id="rate-review-section">
           {/* review section pending */}
           <div className="grid grid-cols-6 gap-2">
             {/* left col - rating */}

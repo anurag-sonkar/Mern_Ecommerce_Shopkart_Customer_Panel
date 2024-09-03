@@ -135,7 +135,7 @@ function Store() {
         page
       })
     );
-  }, [category, brand, color, minPrice, maxPrice, tag, star,sortBy,sortOrder,limit,page , location]);
+  }, [category, brand, color, minPrice, maxPrice, tag, star,sortBy,sortOrder,limit,page]);
 
   // home page select based on category
   useEffect(() => {
