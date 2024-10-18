@@ -6,8 +6,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { login } from "../../../features/auth/authSlice";
 
 function LoginForm() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("deadpool@gmail.com");
+  const [password, setPassword] = useState("123");
   const [error, setError] = useState({});
   const [catchError , setCatchError] = useState("") // backend error
   const dispatch = useDispatch()
