@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState , lazy , Suspense } from "react";
 import {
   Routes,
   Route,
@@ -6,28 +6,28 @@ import {
   useLocation,
 } from "react-router-dom";
 import Layout from "./components/Layout";
-import Home from "./pages/Home";
-import About from "./pages/About";
-import Contact from "./pages/Contact";
-import Error from "./pages/Error";
-import Store from "./pages/Store";
-import Blogs from "./pages/Blogs";
-import CompareProducts from "./pages/CompareProducts";
-import Wishlist from "./pages/Wishlist";
-import AuthenticationForm from "./pages/Authentication/Auth/Auth";
-import SignupForm from "./pages/Authentication/Signup/Signup";
-import LoginForm from "./pages/Authentication/Login/Login";
-import ResetPassword from "./pages/Authentication/ResetPassword";
-import ForgotPassword from "./pages/Authentication/ForgotPassword";
-import SingleBlog from "./pages/SingleBlog";
-import SingleProduct from "./pages/SingleProduct";
-import AddToCart from "./pages/AddToCart";
-import Checkout from "./pages/Checkout";
+const Home = lazy(()=>import('./pages/Home'))
+const About = lazy(()=>import('./pages/About'))
+const Contact = lazy(()=>import('./pages/Contact'))
+const Error = lazy(()=>import('./pages/Error'))
+const Store = lazy(()=>import('./pages/Store'))
+const Blogs = lazy(()=>import('./pages/Blogs'))
+const CompareProducts = lazy(()=>import('./pages/CompareProducts'))
+const Wishlist = lazy(()=>import('./pages/Wishlist'))
+const AuthenticationForm = lazy(() => import('./pages/Authentication/Auth/Auth'))
+const SignupForm = lazy(() => import('./pages/Authentication/Signup/Signup'))
+const LoginForm = lazy(() => import('./pages/Authentication/Login/Login'))
+const ResetPassword = lazy(() => import('./pages/Authentication/ResetPassword'))
+const ForgotPassword = lazy(() => import('./pages/Authentication/ForgotPassword'))
+const SingleBlog = lazy(()=>import('./pages/SingleBlog'))
+const SingleProduct = lazy(()=>import('./pages/SingleProduct'))
+const AddToCart = lazy(()=>import('./pages/AddToCart'))
+const Checkout = lazy(()=>import('./pages/Checkout'))
 import ScrollToTop from "./components/ScrollToTop";
-import PaymentSuccess from "./pages/PaymentSuccess";
+const PaymentSuccess = lazy(()=>import('./pages/PaymentSuccess'))
 import ProtectedRoutes from "./pages/routing/ProtectedRoutes";
-import Orders from "./pages/Orders";
-import MyAccount from "./pages/MyAccount";
+const Orders = lazy(()=>import('./pages/Orders'))
+const MyAccount = lazy(()=>import('./pages/MyAccount'))
 import {
   AppstoreAddOutlined,
 } from "@ant-design/icons";
@@ -39,6 +39,7 @@ import { IoMdContacts } from "react-icons/io";
 
 import { FaOpencart } from "react-icons/fa";
 import { Button } from 'antd';
+import LoadingPage from "./components/LoadingPage";
 
 function App() {
   const [open, setOpen] = useState(false);
@@ -155,6 +156,8 @@ function App() {
         </FloatButton.Group>
       </div>
 
+        <Suspense fallback={<LoadingPage/>}>
+
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
@@ -210,6 +213,7 @@ function App() {
 
         <Route path="*" element={<Error />} />
       </Routes>
+        </Suspense>
     </>
     )
   }
